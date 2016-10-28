@@ -1,0 +1,15 @@
+*.aux
+*.dvi
+*.log
+*.nav
+*.out
+*.pdf
+*.snm
+*.toc
+
+*.java~
+*.class
+
+*.swp
+
+Lablex.java

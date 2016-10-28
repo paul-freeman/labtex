@@ -1,0 +1,134 @@
+\documentclass{lablet}
+
+\begin{document}
+
+\title{Demo 2: Motion analysis}
+
+\maketitle
+
+\begin{labletsheet}{Stage 1 Physics Laboratory}
+	\labletheader{Lab equipment:}
+	\lablettext{Have you got the lab equipment? Check the following:}
+	\labletcheck{a metre rule for setting the length scale in the video}
+	\labletcheck{a ball}
+\end{labletsheet}
+
+\begin{labletvideopage}{Take Videos:}
+	\horizontalthree
+		{\labletvideo{experimentFreeFall}{Please take a free fall video:}}
+		{\labletvideo{experimentUpDown}{Please take an up/down video:}}
+		{\labletvideo{experimentProjectile}{Please take a projectile video:}}
+\end{labletvideopage}
+
+\begin{labletsheet}{Info}
+	\lablettext{Check with your demonstrator about your videos and get ticked off before
+your proceed to video analysis.}
+	\lablettext{Video analysis: In this section, you and your lab partner will track the
+motion of the ball. For all three videos follow these steps:}
+	\lablettext{Go to "Video Settings". Set the start and end frames.  For example, the
+free-fall video should start shortly before the ball leaves your hand and
+shortly after the ball hits the ground. Optionally, increase the frame rate to
+15 or 30 frames per second. Click "Apply".}
+	\lablettext{Now drag the green length scale to fit your length reference. Click on
+"Calibration" and set scale. Click "Apply".}
+	\lablettext{You can now tag the positions of the ball from the initial position to the
+final position. Find the cross-hair with green rings, drag it by the outer ring
+to tag the ball and advance to the next frame. Repeat until you have finished
+tagging. Click “Done” to analyse other videos (e.g. vertical linear motion and
+projectile motion).}
+\end{labletsheet}
+
+\labletmotionpage{Mark Data Points}{experimentFreeFall}{Please analyse the free fall video:}
+
+\labletmotionpage{Mark Data Points}{experimentUpDown}{Please analyse the up/down video:}
+
+\labletmotionpage{Mark Data Points}{experimentProjectile}{Please analyse the projectile video:}
+
+\labletcalcyspeed{Free fall}{experimentFreeFall}{Deriving average y-velocity and y-acceleration from displacement}
+
+\begin{labletsheet}{Free Fall}
+	\labletheader{Estimating impact velocity}
+	\lablettext{Go to your demonstrator once you finished answering the questions on this page:}
+	\horizontaltwo
+		{\lablettext{<graph video="experimentFreeFall" type="X vs Y"></graph>}}
+		{\lablettext{<graph video="experimentFreeFall" type="Time vs Y speed"></graph>}}
+	\lablettext{We know that moving objects have kinetic energy and that energy can be
+transferred from one form to the other. How did the ball gain kinetic energy?}
+	\lablettext{Use the “Conservation of Energy” principle to estimate the impact velocity
+of the ball. How does it compare with your observed final velocity? If there is
+any difference, suggest the possible causes.}
+	\labletcheck{Go to your demonstrator now and verify your results.}
+\end{labletsheet}
+
+\begin{labletsheet}{Vertical linear motion}
+	\labletheader{Analysing graphs:}
+	\lablettext{Use the position-time graph and the velocity-time graph to complete the
+questions below.}
+	\horizontaltwo
+		{
+		\lablettext{<graph
+			title="y-Position vs. Time"
+			xAxis="time"
+			yAxis="y-position"
+			video="experimentUpDown">
+		</graph>}
+		}
+		{
+		\lablettext{<graph
+			title="y-Velocity vs. Time"
+			xAxis="time\_v"
+			yAxis="y-velocity"
+			video="experimentUpDown">
+		</graph>}
+		}
+	\lablettext{How does the vertical velocity vary with time?}
+	\lablettext{Point out on the height-time graph where the vertical velocity of the ball
+was the maximum and also where it was zero.}
+	\labletheader{Estimating Energy Input}
+	\lablettext{Complete the following questions:}
+	\lablettext{<potentialEnergy1Question
+		massText="Please enter the mass of the ball:"
+		heightText="What was the height of the ball at its peak?"
+		energyText="How much energy input enabled the ball to reach this height?"
+		pbjText="A typical peanut butter jam (PBJ) sandwich contains 432 calories. How many throws could you perform with one PBJ sandwich?\\(1 calorie = 4.184 J)">
+	</potentialEnergy1Question>}
+	\labletcheck{Go to your demonstrator now and verify your results.}
+\end{labletsheet}
+
+\begin{labletsheet}{Projectile Motion}
+	\labletheader{Analysing graphs}
+	\lablettext{The position-time graphs and the velocity-time graphs are created from your
+measurements. Use these graphs to complete the questions below.}
+	\horizontaltwo
+		{\lablettext{<graph video="experimentProjectile" type="X vs Y"></graph>}}
+		{\lablettext{<graph video="experimentProjectile" type="Time vs Y speed"></graph>}}
+	\lablettext{How does the vertical velocity vary with time?}
+	\lablettext{How would you draw a free body diagram of the ball at the peak of the
+trajectory?}
+	\lablettext{Compare the “vertical velocity-time” graphs of projectile motion, vertical
+linear motion and free fall. What are the similarities or the differences?
+(Hint: How does the direction of the moving ball affect the sign of velocity?
+Does the velocity vary or remain constant? Does the acceleration vary or remain
+constant?}
+	\labletheader{Analysing the horizontal velocity in projectile motion}
+	<graph video="experimentProjectile" type="Time vs X speed"></graph>
+	\lablettext{Use the “horizontal velocity-time” graph to answer the following question:}
+	\lablettext{Does the horizontal velocity vary or remain constant?  What about the
+horizontal acceleration?}
+	\labletheader{Estimating the horizontal and vertical accelerations}
+	\lablettext{Using the velocity-time graphs, estimate the horizontal and vertical
+accelerations. How did you arrive to your estimates.}
+	\horizontaltwo
+		{\lablettext{<graph video="experimentProjectile" type="Time vs X speed"></graph>}}
+		{\lablettext{<graph video="experimentProjectile" type="Time vs Y speed"></graph>}}
+	\labletheader{Sources of uncertainties}
+	\lablettext{How do your estimates of horizontal and vertical accelerations compare with
+your expected values? What are your expected values?  If there is any
+difference, discuss the sources of uncertainties.}
+	\labletcheck{Go to your demonstrator now and verify your results.}
+	\labletheader{Please export your data:}
+	\lablettext{<export></export>}
+\end{labletsheet}
+
+\end{document}
+
