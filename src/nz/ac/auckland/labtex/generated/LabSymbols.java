@@ -6,7 +6,7 @@
 package nz.ac.auckland.labtex.generated;
 
 /** CUP generated class containing symbol constants. */
-public class sym {
+public class LabSymbols {
   /* terminals */
   public static final int error = 1;
   public static final int BEGIN = 3;

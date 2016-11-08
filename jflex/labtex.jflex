@@ -1,7 +1,7 @@
 /* JFlex file: Labtex language lexer specification */
 /* http://www.jflex.de/manual.html#CUPWork */
 
-package com.company.generated;
+package nz.ac.auckland.labtex.generated;
 import java_cup.runtime.*;
 
 /**
@@ -9,7 +9,7 @@ import java_cup.runtime.*;
  */
 %%
 
-%class Scanner
+%class LabLexer
 %unicode
 %public
 %cup
@@ -41,9 +41,9 @@ LabletText = "\\lablettext" {CurlyString}
 %%
 
 /* keywords */
-<YYINITIAL> "\\title" 		{ System.out.println("TITLE"); return symbol(sym.TITLE); }
-<YYINITIAL> "\\begin"		{ System.out.println("BEGIN"); return symbol(sym.BEGIN); }
-<YYINITIAL> "\\end"			{ System.out.println("END"); return symbol(sym.END); }
+<YYINITIAL> "\\title" 		{ System.out.println("TITLE"); return symbol(LabSymbols.TITLE); }
+<YYINITIAL> "\\begin"		{ System.out.println("BEGIN"); return symbol(LabSymbols.BEGIN); }
+<YYINITIAL> "\\end"			{ System.out.println("END"); return symbol(LabSymbols.END); }
 
 /* ignore */
 <YYINITIAL> {
@@ -52,3 +52,5 @@ LabletText = "\\lablettext" {CurlyString}
 }
 
 [^]	{ throw new Error("illegal character <"+yytext()+">"); }
+
+<<EOF>> { return symbol(LabSymbols.EOF); }

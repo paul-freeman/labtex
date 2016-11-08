@@ -1,7 +1,7 @@
 /* CUP file for generating a parser */
 /* http://www2.cs.tum.edu/projects/cup/ */
 
-package com.company.generated;
+package nz.ac.auckland.labtex.generated;
 import java_cup.runtime.*;
 
 /* terminals */

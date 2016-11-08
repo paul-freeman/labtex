@@ -10,7 +10,7 @@ import java_cup.runtime.*;
  * A lexer class for the custom Labtex language used by Lablet
  */
 
-public class Scanner implements java_cup.runtime.Scanner {
+public class LabLexer implements java_cup.runtime.Scanner {
 
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
@@ -248,7 +248,7 @@ public class Scanner implements java_cup.runtime.Scanner {
    *
    * @param   in  the java.io.Reader to read input from.
    */
-  public Scanner(java.io.Reader in) {
+  public LabLexer(java.io.Reader in) {
     this.zzReader = in;
   }
 
@@ -622,7 +622,9 @@ public class Scanner implements java_cup.runtime.Scanner {
       if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
         zzAtEOF = true;
             zzDoEOF();
-          { return new java_cup.runtime.Symbol(sym.EOF); }
+              {
+                return symbol(LabSymbols.EOF);
+              }
       }
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
@@ -635,15 +637,15 @@ public class Scanner implements java_cup.runtime.Scanner {
             }
           case 7: break;
           case 3: 
-            { System.out.println("END"); return symbol(sym.END);
+            { System.out.println("END"); return symbol(LabSymbols.END);
             }
           case 8: break;
           case 4: 
-            { System.out.println("BEGIN"); return symbol(sym.BEGIN);
+            { System.out.println("BEGIN"); return symbol(LabSymbols.BEGIN);
             }
           case 9: break;
           case 5: 
-            { System.out.println("TITLE"); return symbol(sym.TITLE);
+            { System.out.println("TITLE"); return symbol(LabSymbols.TITLE);
             }
           case 10: break;
           default:
