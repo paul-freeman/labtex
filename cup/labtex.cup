@@ -1,2 +1,18 @@
+/* CUP file for generating a parser */
+/* http://www2.cs.tum.edu/projects/cup/ */
+
+package com.company.generated;
+import java_cup.runtime.*;
+
 /* terminals */
+terminal TITLE, BEGIN, END;
+
+/* non-terminals */
+non terminal lab, sheets;
+
+/* grammar */
+lab    ::= TITLE sheets
+		 | sheets;
+sheets ::= sheets BEGIN END
+		 | BEGIN END;
 
