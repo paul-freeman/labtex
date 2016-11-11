@@ -29,28 +29,74 @@ import java_cup.runtime.*;
 
 LineTerminator = \r|\n|\r\n
 WhiteSpace = {LineTerminator} | [ \t\f]
-
-Comment = "%" ~{LineTerminator}
+Comment = "%" [^\r\n]* ~{LineTerminator}
+Line = [^\r\n]* ~{LineTerminator}
 
 SquareString = "\[" [^\]]* "\]"
 CurlyString  = "\{" [^\}]* "\}"
 
+BeforeTitle = {WhiteSpace}* "\\title"
+BeforeSheet = {WhiteSpace}* "\\begin" {SquareString}? "\{labletsheet\}"
 
-LabletText = "\\lablettext" {CurlyString}
+%state TITLE
+%state TITLED
+%state SHEET
+%state YYINITIAL2
 
 %%
 
 /* keywords */
-<YYINITIAL> "\\title" 		{ System.out.println("TITLE"); return symbol(LabSymbols.TITLE); }
-<YYINITIAL> "\\begin"		{ System.out.println("BEGIN"); return symbol(LabSymbols.BEGIN); }
-<YYINITIAL> "\\end"			{ System.out.println("END"); return symbol(LabSymbols.END); }
-
-/* ignore */
 <YYINITIAL> {
-	{Comment}				{ /* ignore */ }
-	{WhiteSpace}            { /* ignore */ }
+    /* [^] { System.out.println("ERROR - Found: "+yytext()); } */
+    {Line} { /* System.out.println("LINE: "+yytext()); */ }
+    {BeforeTitle} {
+        System.out.println("Changing from YYINITIAL to TITLE");
+        yybegin(TITLE);
+        return symbol(LabSymbols.TITLE);
+    }
+    {BeforeSheet} {
+        System.out.println("BEGIN");
+        System.out.println("Changing from YYINITIAL to SHEET");
+        yybegin(SHEET);
+        return symbol(LabSymbols.BEGIN);
+    }
 }
 
-[^]	{ throw new Error("illegal character <"+yytext()+">"); }
+<TITLE> {
+    [\{] {
+        string.setLength(0);
+    }
+    [\}] {
+        System.out.println("Changing from TITLE to TITLED");
+        yybegin(TITLED);
+        return symbol(LabSymbols.STRING, string.toString());
+    }
+    [^\{\}]+ {
+        System.out.println(yytext());
+        string.append(yytext());
+    }
+}
+
+<TITLED> {
+    {Line} { /* System.out.println("LINE: "+yytext()); */ }
+    {BeforeSheet} {
+        System.out.println("BEGIN");
+        System.out.println("Changing from TITLED to SHEET");
+        yybegin(SHEET);
+        return symbol(LabSymbols.BEGIN);
+    }
+}
+
+<SHEET> {
+    [^] {
+        System.out.print(yytext());
+    }
+    "\\end"	{SquareString}? "\{lablet\}" {
+        System.out.println("END");
+        System.out.println("Changing from SHEET to TITLED");
+        yybegin(TITLED);
+        return symbol(LabSymbols.END);
+    }
+}
 
 <<EOF>> { return symbol(LabSymbols.EOF); }

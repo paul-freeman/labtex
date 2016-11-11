@@ -6,13 +6,29 @@ import java_cup.runtime.*;
 
 /* terminals */
 terminal TITLE, BEGIN, END;
+terminal LCURLY, RCURLY;
+terminal STRING;
 
 /* non-terminals */
-non terminal lab, sheets;
+non terminal    lab, sheets;
+non terminal    debug;
 
 /* grammar */
-lab    ::= TITLE sheets
+lab    ::= TITLE STRING sheets
 		 | sheets;
 sheets ::= sheets BEGIN END
 		 | BEGIN END;
+
+debug ::= TITLE debug
+        | BEGIN debug
+        | END debug
+        | LCURLY debug
+        | RCURLY debug
+        | STRING debug
+        | TITLE
+        | BEGIN
+        | END
+        | LCURLY
+        | RCURLY
+        | STRING;
 
