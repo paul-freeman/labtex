@@ -9,12 +9,13 @@ action code {:
     Integer horizontalnumber = 0;
     Integer verticalnumber = 0;
     String element = null;
+    String prev = null;
 :}
 
 /* terminals */
 terminal         TITLE, BEGIN, END;
 terminal         LCURLY, RCURLY;
-terminal         LABLETTEXT, LABLETHEADER, HORIZONTALTWO;
+terminal         LABLETTEXT, LABLETHEADER, LABLETCHECK, HORIZONTALTWO;
 terminal String  STRING;
 
 /* non-terminals */
@@ -23,16 +24,25 @@ non terminal    begin, horizontal, vertical;
 
 /* grammar */
 lab ::=
-            TITLE sheets
-		    | sheets ;
+            TITLE
+            {: System.out.println("function Lablet.buildActivity(builder)"); :}
+            sheets
+            {: System.out.println("end"); :}
+		    |
+            {: System.out.println("function Lablet.buildActivity(builder)"); :}
+            sheets
+            {: System.out.println("end"); :}
+            ;
 sheets ::=
             sheets begin elems END
-		    | begin elems END ;
+		    |
+		    begin elems END ;
 begin ::=
             BEGIN LCURLY STRING:s
             {:
                 ++sheetnumber;
-                System.out.println("function Lablet.buildActivity(builder)");
+                System.out.println();
+                System.out.println("    -- SHEET "+sheetnumber);
                 System.out.println("    local sheet"+sheetnumber+" = builder:create(\"Sheet\")");
                 System.out.println("    builder:add(sheet"+sheetnumber+")");
                 System.out.println("    sheet"+sheetnumber+":setTitle(\""+s+"\")\n");
@@ -42,7 +52,8 @@ begin ::=
             BEGIN
             {:
                 ++sheetnumber;
-                System.out.println("function Lablet.buildActivity(builder)");
+                System.out.println();
+                System.out.println("    -- SHEET "+sheetnumber);
                 System.out.println("    local sheet"+sheetnumber+" = builder:create(\"Sheet\")");
                 System.out.println("    builder:add(sheet"+sheetnumber+")");
             :}
@@ -60,6 +71,12 @@ elem ::=
             LABLETHEADER LCURLY STRING:s
             {:
                 System.out.println("    sheet"+sheetnumber+":addHeader(\""+s+"\")");
+            :}
+            RCURLY
+            |
+            LABLETCHECK LCURLY STRING:s
+            {:
+                System.out.println("    sheet"+sheetnumber+":addCheckQuestion(\""+s+"\")");
             :}
             RCURLY
             |
@@ -81,6 +98,12 @@ named_elem ::=
             :}
             RCURLY
             |
+            LABLETCHECK LCURLY STRING:s
+            {:
+                System.out.println("    sheet"+sheetnumber+":addCheckQuestion(\""+s+"\", "+element+")");
+            :}
+            RCURLY
+            |
             horizontal
             ;
 horizontal ::=
@@ -88,7 +111,9 @@ horizontal ::=
             {:
                 Integer h = ++horizontalnumber;
                 Integer n = sheetnumber;
-                System.out.println("    local horizontalLayout"+h+" = sheet"+n+":addHorizontalGroupLayout()");
+                element = "horizontalLayout" + h;
+                System.out.println();
+                System.out.println("    local "+element+" = sheet"+n+":addHorizontalGroupLayout()");
             :}
             LCURLY vertical RCURLY
             LCURLY vertical RCURLY
@@ -96,12 +121,11 @@ horizontal ::=
 vertical ::=
             {:
                 Integer v = ++verticalnumber;
-                String old = element;
+                prev = element;
                 element = "verticalLayout" + v;
-                System.out.println("    local "+element+" = sheet:addVerticalGroupLayout("+old+")");
+                System.out.println();
+                System.out.println("    local "+element+" = sheet:addVerticalGroupLayout("+prev+")");
             :}
             named_elems
-            {:
-                element = old;
-            :}
+            {: element = prev; :}
             ;

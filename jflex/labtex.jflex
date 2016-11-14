@@ -37,8 +37,10 @@ CurlyString  = "\{" [^\}]* "\}"
 
 BeforeTitle   = {WhiteSpace}* "\\title"
 BeforeSheet   = {WhiteSpace}* "\\begin" {SquareString}? "\{labletsheet\}"
+EndSheet      = {WhiteSpace}* "\\end\{labletsheet\}"
 LabletText    = {WhiteSpace}* "\\lablettext" {SquareString}?
 LabletHeader  = {WhiteSpace}* "\\labletheader" {SquareString}?
+LabletCheck   = {WhiteSpace}* "\\labletcheck" {SquareString}?
 HorizontalTwo = {WhiteSpace}* "\\horizontaltwo"
 
 %state TITLE
@@ -110,12 +112,15 @@ HorizontalTwo = {WhiteSpace}* "\\horizontaltwo"
     {LabletHeader} {
         return symbol(LabParserSym.LABLETHEADER);
     }
+    {LabletCheck} {
+        return symbol(LabParserSym.LABLETCHECK);
+    }
     {HorizontalTwo} {
         return symbol(LabParserSym.HORIZONTALTWO);
     }
-    "\\end"	{SquareString}? "\{lablet\}" {
+    {EndSheet} {
         yybegin(TITLED);
-        //System.out.println("END");
+       // System.out.println("END");
         return symbol(LabParserSym.END);
     }
     [^] {
@@ -134,7 +139,11 @@ HorizontalTwo = {WhiteSpace}* "\\horizontaltwo"
         // System.out.println("Found a whitespace thing: "+yytext());
         string.append(' ');
     }
-    [^\} \n\r\t\f] {
+    [\"] { /* need to escape quotes in Lua strings */
+        string.append('\\');
+        string.append('\"');
+    }
+    [^\"\} \n\r\t\f] {
         // System.out.println("Found a non-string thing: "+yytext());
         string.append(yytext());
     }
