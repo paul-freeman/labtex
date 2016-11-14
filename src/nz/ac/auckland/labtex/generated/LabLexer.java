@@ -24,6 +24,7 @@ public class LabLexer implements java_cup.runtime.Scanner {
   public static final int TITLED = 4;
   public static final int SHEET = 6;
   public static final int YYINITIAL2 = 8;
+  public static final int STRING = 10;
 
   /**
    * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
@@ -32,7 +33,7 @@ public class LabLexer implements java_cup.runtime.Scanner {
    * l is of the form l = 2*k, k a non negative integer
    */
   private static final int ZZ_LEXSTATE[] = { 
-     0,  0,  1,  1,  2,  2,  3,  3,  4, 4
+     0,  0,  1,  1,  2,  2,  3,  3,  4,  4,  5, 5
   };
 
   /** 
@@ -40,9 +41,10 @@ public class LabLexer implements java_cup.runtime.Scanner {
    */
   private static final String ZZ_CMAP_PACKED = 
     "\11\0\1\3\1\2\1\0\1\3\1\1\22\0\1\3\4\0\1\0"+
-    "\65\0\1\4\1\10\1\5\3\0\1\20\1\15\1\0\1\23\1\14"+
-    "\1\0\1\16\1\22\1\12\2\0\1\13\1\0\1\17\4\0\1\21"+
-    "\1\11\6\0\1\6\1\0\1\7\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uff92\0";
+    "\12\0\12\31\7\0\32\31\1\4\1\10\1\5\3\0\1\20\1\15"+
+    "\1\31\1\24\1\14\1\31\1\16\1\22\1\12\2\31\1\13\1\31"+
+    "\1\17\1\26\2\31\1\25\1\21\1\11\2\31\1\30\1\23\1\31"+
+    "\1\27\1\6\1\0\1\7\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uff92\0";
 
   /** 
    * Translates characters to character classes
@@ -55,13 +57,14 @@ public class LabLexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\6\0\2\1\1\0\1\2\1\3\1\4\2\1\1\0"+
-    "\2\5\2\1\40\0\1\6\5\0\1\6\11\0\2\1"+
-    "\4\0\2\1\30\0\1\7\31\0\1\10\1\0\1\11"+
-    "\1\10\1\11";
+    "\7\0\2\1\1\0\1\2\1\3\1\4\2\1\1\0"+
+    "\2\5\1\6\1\7\1\5\1\10\1\11\1\12\1\13"+
+    "\2\1\43\0\1\14\5\0\1\14\10\0\2\1\25\0"+
+    "\1\15\7\0\1\16\3\0\1\15\1\17\4\0\1\20"+
+    "\2\0\1\17\7\0\2\21";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[130];
+    int [] result = new int[131];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -86,26 +89,26 @@ public class LabLexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\24\0\50\0\74\0\120\0\144\0\170\0\214"+
-    "\0\240\0\264\0\120\0\120\0\310\0\334\0\360\0\120"+
-    "\0\u0104\0\u0118\0\120\0\214\0\u012c\0\u0140\0\u0154\0\334"+
-    "\0\u0168\0\u017c\0\u0190\0\u01a4\0\u01b8\0\u01cc\0\u01e0\0\u01f4"+
-    "\0\u0208\0\u021c\0\u0230\0\u0244\0\u0258\0\u026c\0\u0280\0\u0294"+
-    "\0\u02a8\0\u02bc\0\u02d0\0\u02e4\0\u02f8\0\u030c\0\u0320\0\u0334"+
-    "\0\u0348\0\u035c\0\u0370\0\144\0\u0384\0\u0398\0\u03ac\0\u03c0"+
-    "\0\u03d4\0\120\0\u03e8\0\u03fc\0\u0410\0\u0424\0\u0438\0\u044c"+
-    "\0\u0460\0\u0474\0\u0488\0\u049c\0\u0474\0\u04b0\0\u04c4\0\u04d8"+
-    "\0\u04ec\0\u0500\0\u04d8\0\u0514\0\u0528\0\u053c\0\u0550\0\u0564"+
-    "\0\u0578\0\u058c\0\u05a0\0\u05b4\0\u05c8\0\u05dc\0\u05f0\0\u0604"+
-    "\0\u0618\0\u062c\0\u0640\0\u0654\0\u0668\0\u067c\0\u0690\0\u06a4"+
-    "\0\u06b8\0\u06cc\0\u06e0\0\120\0\u06f4\0\u0708\0\u071c\0\u0730"+
-    "\0\u0744\0\u0758\0\u076c\0\u0780\0\u0794\0\u07a8\0\u07bc\0\u07d0"+
-    "\0\u07e4\0\u07f8\0\u080c\0\u0820\0\u0834\0\u0848\0\u085c\0\u0870"+
-    "\0\u0884\0\u0898\0\u08ac\0\u08c0\0\u08d4\0\144\0\u08e8\0\144"+
-    "\0\120\0\120";
+    "\0\0\0\32\0\64\0\116\0\150\0\202\0\234\0\266"+
+    "\0\320\0\352\0\u0104\0\150\0\150\0\u011e\0\u0138\0\u0152"+
+    "\0\150\0\u016c\0\150\0\u0186\0\u01a0\0\150\0\150\0\u01ba"+
+    "\0\150\0\u01d4\0\150\0\320\0\u01ee\0\u0208\0\u0222\0\u0138"+
+    "\0\u023c\0\u016c\0\u0256\0\u0270\0\u028a\0\u02a4\0\u02be\0\u02d8"+
+    "\0\u02f2\0\u030c\0\u0326\0\u0340\0\u035a\0\u0374\0\u038e\0\u03a8"+
+    "\0\u03c2\0\u03dc\0\u03f6\0\u0410\0\u042a\0\u0444\0\u045e\0\u0478"+
+    "\0\u0492\0\u04ac\0\u04c6\0\u04e0\0\u04fa\0\u0514\0\234\0\u052e"+
+    "\0\u0548\0\u0562\0\u057c\0\u0596\0\150\0\u05b0\0\u05ca\0\u05e4"+
+    "\0\u05fe\0\u0618\0\u0632\0\u064c\0\u0666\0\u0680\0\u064c\0\u069a"+
+    "\0\u06b4\0\u06ce\0\u06e8\0\u0702\0\u071c\0\u0736\0\u0750\0\u076a"+
+    "\0\u0784\0\u079e\0\u07b8\0\u07d2\0\u07ec\0\u0806\0\u0820\0\u083a"+
+    "\0\u0854\0\u086e\0\u0888\0\u08a2\0\u08bc\0\u08d6\0\u08f0\0\u090a"+
+    "\0\u0924\0\u093e\0\u0958\0\u0972\0\150\0\u098c\0\u09a6\0\u09c0"+
+    "\0\150\0\u09da\0\u09f4\0\u0a0e\0\u0a28\0\u0a42\0\150\0\u0a5c"+
+    "\0\u0a76\0\150\0\u0a90\0\u0aaa\0\u0ac4\0\u0ade\0\u0af8\0\u0b12"+
+    "\0\u0b2c\0\234\0\150";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[130];
+    int [] result = new int[131];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -128,70 +131,59 @@ public class LabLexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_TRANS = zzUnpackTrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\6\1\7\1\10\1\1\4\6\1\11\13\6\6\12"+
-    "\1\13\1\14\14\12\1\6\1\15\1\16\1\3\4\6"+
-    "\1\17\13\6\10\20\1\21\13\20\24\0\1\6\1\22"+
-    "\1\23\21\6\1\0\1\24\1\10\1\24\4\0\1\25"+
-    "\14\0\3\24\4\0\1\25\13\0\1\6\1\22\1\23"+
-    "\6\6\1\26\3\6\1\27\6\6\6\12\2\0\14\12"+
-    "\1\0\1\30\1\16\1\30\4\0\1\31\14\0\3\30"+
-    "\4\0\1\31\13\0\1\6\1\22\1\23\12\6\1\32"+
-    "\6\6\14\0\1\33\11\0\1\23\32\0\1\34\3\0"+
-    "\1\35\6\0\1\6\1\22\1\23\7\6\1\36\12\6"+
-    "\1\22\1\23\11\6\1\37\7\6\15\0\1\40\6\0"+
-    "\1\6\1\22\1\23\11\6\1\41\7\6\17\0\1\42"+
-    "\16\0\1\43\25\0\1\44\7\0\1\6\1\22\1\23"+
-    "\6\6\1\45\13\6\1\22\1\23\13\6\1\46\5\6"+
-    "\14\0\1\47\7\0\1\6\1\22\1\23\13\6\1\50"+
-    "\5\6\23\0\1\51\11\0\1\52\30\0\1\53\5\0"+
-    "\1\6\1\22\1\23\10\6\1\54\11\6\1\22\1\23"+
-    "\7\6\1\55\11\6\16\0\1\56\5\0\1\6\1\22"+
-    "\1\23\7\6\1\57\11\6\4\0\1\60\1\0\1\61"+
-    "\30\0\1\62\22\0\1\63\11\0\1\6\1\22\1\23"+
-    "\11\6\1\64\10\6\1\22\1\23\14\6\1\65\4\6"+
-    "\12\0\1\66\11\0\1\6\1\22\1\23\14\6\1\67"+
-    "\4\6\5\60\1\70\16\60\13\0\1\71\24\0\1\72"+
-    "\26\0\1\73\4\0\1\6\1\22\1\23\1\6\1\74"+
-    "\1\6\1\75\15\6\17\0\1\76\4\0\1\6\1\22"+
-    "\1\23\1\6\1\77\1\6\1\100\15\6\6\0\1\61"+
-    "\35\0\1\101\7\0\1\102\1\0\1\103\15\0\1\74"+
-    "\1\104\1\105\2\74\1\106\16\74\1\6\1\22\1\23"+
-    "\10\6\1\107\10\6\4\0\1\110\1\0\1\111\15\0"+
-    "\1\77\1\112\1\113\2\77\1\114\16\77\1\6\1\22"+
-    "\1\23\10\6\1\115\10\6\15\0\1\116\6\0\5\102"+
-    "\1\117\16\102\13\0\1\120\10\0\2\102\1\105\2\102"+
-    "\1\117\16\102\1\6\1\22\1\23\3\6\1\75\16\6"+
-    "\1\22\1\23\15\6\1\121\3\6\5\110\1\122\16\110"+
-    "\13\0\1\123\10\0\2\110\1\113\2\110\1\122\16\110"+
-    "\1\6\1\22\1\23\3\6\1\100\16\6\1\22\1\23"+
-    "\15\6\1\124\3\6\13\0\1\125\16\0\1\103\35\0"+
-    "\1\126\3\0\1\6\1\22\1\23\12\6\1\127\6\6"+
-    "\6\0\1\111\35\0\1\130\3\0\1\6\1\22\1\23"+
-    "\12\6\1\131\6\6\14\0\1\132\24\0\1\133\6\0"+
-    "\1\6\1\22\1\23\10\6\1\134\10\6\15\0\1\135"+
-    "\6\0\1\6\1\22\1\23\10\6\1\136\10\6\11\0"+
-    "\1\137\25\0\1\140\10\0\1\6\1\22\1\23\11\6"+
-    "\1\141\7\6\13\0\1\142\10\0\1\6\1\22\1\23"+
-    "\11\6\1\143\7\6\7\0\1\144\30\0\1\145\7\0"+
-    "\1\6\1\22\1\23\6\6\1\146\12\6\14\0\1\147"+
-    "\7\0\1\6\1\22\1\23\6\6\1\150\12\6\11\0"+
-    "\1\151\12\0\1\6\1\22\1\23\16\6\1\152\2\6"+
-    "\11\0\1\153\12\0\1\6\1\22\1\23\16\6\1\154"+
-    "\2\6\21\0\1\155\2\0\1\6\1\22\1\23\17\6"+
-    "\1\156\1\6\21\0\1\157\2\0\1\6\1\22\1\23"+
-    "\17\6\1\160\1\6\22\0\1\161\1\0\1\6\1\22"+
-    "\1\23\11\6\1\162\7\6\22\0\1\163\1\0\1\6"+
-    "\1\22\1\23\11\6\1\164\7\6\14\0\1\165\7\0"+
-    "\1\6\1\22\1\23\11\6\1\166\7\6\14\0\1\167"+
-    "\7\0\1\6\1\22\1\23\11\6\1\170\7\6\14\0"+
-    "\1\171\7\0\1\6\1\22\1\23\6\6\1\172\12\6"+
-    "\14\0\1\173\7\0\1\6\1\22\1\23\6\6\1\174"+
-    "\12\6\11\0\1\175\12\0\1\6\1\22\1\23\4\6"+
-    "\1\176\14\6\11\0\1\177\12\0\1\6\1\22\1\23"+
-    "\4\6\1\200\14\6\7\0\1\201\23\0\1\202\14\0";
+    "\1\7\1\10\1\11\1\1\4\7\1\12\21\7\6\13"+
+    "\1\14\1\15\22\13\1\7\1\16\1\17\1\3\4\7"+
+    "\1\20\21\7\1\21\3\22\2\21\1\23\1\24\1\25"+
+    "\21\26\32\0\1\27\3\30\3\27\1\31\22\27\1\7"+
+    "\1\32\1\33\27\7\1\0\1\34\1\11\1\34\4\0"+
+    "\1\35\22\0\3\34\4\0\1\35\21\0\1\7\1\32"+
+    "\1\33\6\7\1\36\3\7\1\37\14\7\6\13\2\0"+
+    "\22\13\1\0\1\40\1\17\1\40\4\0\1\41\22\0"+
+    "\3\40\4\0\1\41\21\0\1\7\1\32\1\33\12\7"+
+    "\1\37\14\7\1\0\3\42\4\0\1\43\22\0\3\24"+
+    "\41\0\1\44\1\45\5\0\1\46\10\0\3\30\30\0"+
+    "\1\33\40\0\1\47\3\0\1\50\14\0\1\7\1\32"+
+    "\1\33\7\7\1\51\20\7\1\32\1\33\11\7\1\52"+
+    "\15\7\15\0\1\50\27\0\1\44\6\0\1\46\27\0"+
+    "\1\53\30\0\1\54\40\0\1\55\15\0\1\56\33\0"+
+    "\1\57\15\0\1\7\1\32\1\33\6\7\1\60\21\7"+
+    "\1\32\1\33\13\7\1\61\13\7\15\0\1\62\40\0"+
+    "\1\63\32\0\1\64\15\0\1\65\36\0\1\66\13\0"+
+    "\1\7\1\32\1\33\10\7\1\67\17\7\1\32\1\33"+
+    "\7\7\1\70\17\7\13\0\1\71\22\0\1\72\1\0"+
+    "\1\73\35\0\1\74\32\0\1\75\30\0\1\76\17\0"+
+    "\1\7\1\32\1\33\11\7\1\77\16\7\1\32\1\33"+
+    "\14\7\1\100\12\7\14\0\1\101\15\0\5\72\1\102"+
+    "\24\72\13\0\1\103\45\0\1\104\16\0\1\105\34\0"+
+    "\1\106\12\0\1\7\1\32\1\33\1\7\1\107\1\7"+
+    "\1\110\23\7\11\0\1\111\26\0\1\73\43\0\1\112"+
+    "\37\0\1\113\7\0\1\114\1\0\1\115\23\0\1\107"+
+    "\1\116\1\117\2\107\1\120\24\107\1\7\1\32\1\33"+
+    "\10\7\1\121\16\7\11\0\1\122\10\0\1\123\24\0"+
+    "\1\124\33\0\1\125\12\0\5\114\1\126\24\114\13\0"+
+    "\1\127\16\0\2\114\1\117\2\114\1\126\24\114\1\7"+
+    "\1\32\1\33\3\7\1\110\24\7\1\32\1\33\15\7"+
+    "\1\130\11\7\14\0\1\131\31\0\1\132\30\0\1\133"+
+    "\27\0\1\134\26\0\1\115\43\0\1\135\11\0\1\7"+
+    "\1\32\1\33\12\7\1\136\14\7\23\0\1\137\26\0"+
+    "\1\140\25\0\1\141\35\0\1\142\26\0\1\143\14\0"+
+    "\1\7\1\32\1\33\10\7\1\144\16\7\11\0\1\145"+
+    "\44\0\1\146\16\0\1\147\33\0\1\150\31\0\1\151"+
+    "\16\0\1\7\1\32\1\33\11\7\1\152\15\7\4\0"+
+    "\1\153\41\0\1\154\24\0\1\155\33\0\1\156\34\0"+
+    "\1\157\15\0\1\7\1\32\1\33\6\7\1\160\20\7"+
+    "\5\153\1\161\24\153\25\0\1\162\34\0\1\163\12\0"+
+    "\1\164\20\0\1\7\1\32\1\33\16\7\1\165\10\7"+
+    "\4\0\1\166\53\0\1\167\24\0\1\170\10\0\1\7"+
+    "\1\32\1\33\17\7\1\171\7\7\5\166\1\172\24\166"+
+    "\22\0\1\173\7\0\1\7\1\32\1\33\11\7\1\174"+
+    "\15\7\14\0\1\175\15\0\1\7\1\32\1\33\11\7"+
+    "\1\176\15\7\14\0\1\177\15\0\1\7\1\32\1\33"+
+    "\6\7\1\200\20\7\11\0\1\201\20\0\1\7\1\32"+
+    "\1\33\4\7\1\202\22\7\7\0\1\203\22\0";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[2300];
+    int [] result = new int[2886];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -229,13 +221,14 @@ public class LabLexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\4\0\1\10\1\0\2\1\1\0\1\1\2\11\2\1"+
-    "\1\0\1\11\2\1\1\11\40\0\1\1\5\0\1\11"+
-    "\11\0\2\1\4\0\2\1\30\0\1\11\31\0\1\1"+
-    "\1\0\1\1\2\11";
+    "\4\0\1\10\2\0\2\1\1\0\1\1\2\11\2\1"+
+    "\1\0\1\11\1\1\1\11\2\1\2\11\1\1\1\11"+
+    "\1\1\1\11\43\0\1\1\5\0\1\11\10\0\2\1"+
+    "\25\0\1\1\7\0\1\11\3\0\1\11\1\1\4\0"+
+    "\1\11\2\0\1\11\7\0\1\1\1\11";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[130];
+    int [] result = new int[131];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -341,7 +334,7 @@ public class LabLexer implements java_cup.runtime.Scanner {
     char [] map = new char[0x110000];
     int i = 0;  /* index in packed string  */
     int j = 0;  /* index in unpacked array */
-    while (i < 104) {
+    while (i < 122) {
       int  count = packed.charAt(i++);
       char value = packed.charAt(i++);
       do map[j++] = value; while (--count > 0);
@@ -701,7 +694,7 @@ public class LabLexer implements java_cup.runtime.Scanner {
         zzAtEOF = true;
             zzDoEOF();
               {
-                return symbol(LabSymbols.EOF);
+                return symbol(LabParserSym.EOF);
               }
       }
       else {
@@ -709,53 +702,87 @@ public class LabLexer implements java_cup.runtime.Scanner {
           case 1: 
             { /* System.out.println("LINE: "+yytext()); */
             }
-          case 10: break;
+          case 18: break;
           case 2: 
-            { System.out.println(yytext());
-        string.append(yytext());
+            { System.out.print("Lablet = {\n    interface = 1.0,\n    title = ");
+        System.out.print("\""+yytext()+"\"\n}\n\n\n");
             }
-          case 11: break;
+          case 19: break;
           case 3: 
             { string.setLength(0);
             }
-          case 12: break;
+          case 20: break;
           case 4: 
-            { System.out.println("Changing from TITLE to TITLED");
-        yybegin(TITLED);
-        return symbol(LabSymbols.STRING, string.toString());
+            { yybegin(TITLED);
             }
-          case 13: break;
+          case 21: break;
           case 5: 
-            { System.out.print(yytext());
+            { //System.out.print(yytext());
             }
-          case 14: break;
+          case 22: break;
           case 6: 
-            { System.out.println("Changing from YYINITIAL to TITLE");
-        yybegin(TITLE);
-        return symbol(LabSymbols.TITLE);
+            { //System.out.println("LCURLY");
+        return symbol(LabParserSym.LCURLY);
             }
-          case 15: break;
+          case 23: break;
           case 7: 
-            { System.out.println("END");
-        System.out.println("Changing from SHEET to TITLED");
-        yybegin(TITLED);
-        return symbol(LabSymbols.END);
+            { //System.out.println("RCURLY");
+        return symbol(LabParserSym.RCURLY);
             }
-          case 16: break;
+          case 24: break;
           case 8: 
-            { System.out.println("BEGIN");
-        System.out.println("Changing from YYINITIAL to SHEET");
-        yybegin(SHEET);
-        return symbol(LabSymbols.BEGIN);
+            { string.setLength(0);
+        yybegin(STRING);
+        yypushback(1);
             }
-          case 17: break;
+          case 25: break;
           case 9: 
-            { System.out.println("BEGIN");
-        System.out.println("Changing from TITLED to SHEET");
-        yybegin(SHEET);
-        return symbol(LabSymbols.BEGIN);
+            { // System.out.println("Found a non-string thing: "+yytext());
+        string.append(yytext());
             }
-          case 18: break;
+          case 26: break;
+          case 10: 
+            { // System.out.println("Found a whitespace thing: "+yytext());
+        string.append(' ');
+            }
+          case 27: break;
+          case 11: 
+            { yybegin(SHEET);
+        yypushback(1);
+        //System.out.println("STRING "+string.toString());
+        return symbol(LabParserSym.STRING, string.toString());
+            }
+          case 28: break;
+          case 12: 
+            { //System.out.println("TITLE");
+        yybegin(TITLE);
+        return symbol(LabParserSym.TITLE);
+            }
+          case 29: break;
+          case 13: 
+            { return symbol(LabParserSym.LABLETTEXT);
+            }
+          case 30: break;
+          case 14: 
+            { yybegin(TITLED);
+        //System.out.println("END");
+        return symbol(LabParserSym.END);
+            }
+          case 31: break;
+          case 15: 
+            { return symbol(LabParserSym.LABLETHEADER);
+            }
+          case 32: break;
+          case 16: 
+            { return symbol(LabParserSym.HORIZONTALTWO);
+            }
+          case 33: break;
+          case 17: 
+            { yybegin(SHEET);
+        //System.out.println("BEGIN");
+        return symbol(LabParserSym.BEGIN);
+            }
+          case 34: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }

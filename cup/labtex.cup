@@ -3,32 +3,105 @@
 
 package nz.ac.auckland.labtex.generated;
 import java_cup.runtime.*;
+class LabParser;
+action code {:
+    Integer sheetnumber = 0;
+    Integer horizontalnumber = 0;
+    Integer verticalnumber = 0;
+    String element = null;
+:}
 
 /* terminals */
-terminal TITLE, BEGIN, END;
-terminal LCURLY, RCURLY;
-terminal STRING;
+terminal         TITLE, BEGIN, END;
+terminal         LCURLY, RCURLY;
+terminal         LABLETTEXT, LABLETHEADER, HORIZONTALTWO;
+terminal String  STRING;
 
 /* non-terminals */
-non terminal    lab, sheets;
-non terminal    debug;
+non terminal    lab, sheets, elem, elems, named_elem, named_elems;
+non terminal    begin, horizontal, vertical;
 
 /* grammar */
-lab    ::= TITLE STRING sheets
-		 | sheets;
-sheets ::= sheets BEGIN END
-		 | BEGIN END;
-
-debug ::= TITLE debug
-        | BEGIN debug
-        | END debug
-        | LCURLY debug
-        | RCURLY debug
-        | STRING debug
-        | TITLE
-        | BEGIN
-        | END
-        | LCURLY
-        | RCURLY
-        | STRING;
-
+lab ::=
+            TITLE sheets
+		    | sheets ;
+sheets ::=
+            sheets begin elems END
+		    | begin elems END ;
+begin ::=
+            BEGIN LCURLY STRING:s
+            {:
+                ++sheetnumber;
+                System.out.println("function Lablet.buildActivity(builder)");
+                System.out.println("    local sheet"+sheetnumber+" = builder:create(\"Sheet\")");
+                System.out.println("    builder:add(sheet"+sheetnumber+")");
+                System.out.println("    sheet"+sheetnumber+":setTitle(\""+s+"\")\n");
+            :}
+            RCURLY
+            |
+            BEGIN
+            {:
+                ++sheetnumber;
+                System.out.println("function Lablet.buildActivity(builder)");
+                System.out.println("    local sheet"+sheetnumber+" = builder:create(\"Sheet\")");
+                System.out.println("    builder:add(sheet"+sheetnumber+")");
+            :}
+            ;
+elems ::=
+            elem elems
+            | elem ;
+elem ::=
+            LABLETTEXT LCURLY STRING:s
+            {:
+                System.out.println("    sheet"+sheetnumber+":addText(\""+s+"\")");
+            :}
+            RCURLY
+            |
+            LABLETHEADER LCURLY STRING:s
+            {:
+                System.out.println("    sheet"+sheetnumber+":addHeader(\""+s+"\")");
+            :}
+            RCURLY
+            |
+            horizontal
+            ;
+named_elems ::=
+            named_elem named_elems
+            | named_elem ;
+named_elem ::=
+            LABLETTEXT LCURLY STRING:s
+            {:
+                System.out.println("    sheet"+sheetnumber+":addText(\""+s+"\", "+element+")");
+            :}
+            RCURLY
+            |
+            LABLETHEADER LCURLY STRING:s
+            {:
+                System.out.println("    sheet"+sheetnumber+":addHeader(\""+s+"\", "+element+")");
+            :}
+            RCURLY
+            |
+            horizontal
+            ;
+horizontal ::=
+            HORIZONTALTWO
+            {:
+                Integer h = ++horizontalnumber;
+                Integer n = sheetnumber;
+                System.out.println("    local horizontalLayout"+h+" = sheet"+n+":addHorizontalGroupLayout()");
+            :}
+            LCURLY vertical RCURLY
+            LCURLY vertical RCURLY
+            ;
+vertical ::=
+            {:
+                Integer v = ++verticalnumber;
+                String old = element;
+                element = "verticalLayout" + v;
+                System.out.println("    local "+element+" = sheet:addVerticalGroupLayout("+old+")");
+            :}
+            named_elems
+            {:
+                element = old;
+            :}
+            ;

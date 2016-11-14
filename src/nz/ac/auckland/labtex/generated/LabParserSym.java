@@ -6,16 +6,19 @@
 package nz.ac.auckland.labtex.generated;
 
 /** CUP generated class containing symbol constants. */
-public class LabSymbols {
+public class LabParserSym {
   /* terminals */
-  public static final int STRING = 7;
-  public static final int error = 1;
-  public static final int LCURLY = 5;
-  public static final int BEGIN = 3;
-  public static final int END = 4;
-  public static final int TITLE = 2;
+  public static final int HORIZONTALTWO = 9;
+  public static final int LABLETTEXT = 7;
+  public static final int STRING = 10;
   public static final int EOF = 0;
+  public static final int TITLE = 2;
+  public static final int LABLETHEADER = 8;
+  public static final int error = 1;
   public static final int RCURLY = 6;
+  public static final int END = 4;
+  public static final int BEGIN = 3;
+  public static final int LCURLY = 5;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -24,6 +27,9 @@ public class LabSymbols {
   "END",
   "LCURLY",
   "RCURLY",
+  "LABLETTEXT",
+  "LABLETHEADER",
+  "HORIZONTALTWO",
   "STRING"
   };
 }

@@ -35,13 +35,17 @@ Line = [^\r\n]* ~{LineTerminator}
 SquareString = "\[" [^\]]* "\]"
 CurlyString  = "\{" [^\}]* "\}"
 
-BeforeTitle = {WhiteSpace}* "\\title"
-BeforeSheet = {WhiteSpace}* "\\begin" {SquareString}? "\{labletsheet\}"
+BeforeTitle   = {WhiteSpace}* "\\title"
+BeforeSheet   = {WhiteSpace}* "\\begin" {SquareString}? "\{labletsheet\}"
+LabletText    = {WhiteSpace}* "\\lablettext" {SquareString}?
+LabletHeader  = {WhiteSpace}* "\\labletheader" {SquareString}?
+HorizontalTwo = {WhiteSpace}* "\\horizontaltwo"
 
 %state TITLE
 %state TITLED
 %state SHEET
 %state YYINITIAL2
+%state STRING
 
 %%
 
@@ -50,15 +54,14 @@ BeforeSheet = {WhiteSpace}* "\\begin" {SquareString}? "\{labletsheet\}"
     /* [^] { System.out.println("ERROR - Found: "+yytext()); } */
     {Line} { /* System.out.println("LINE: "+yytext()); */ }
     {BeforeTitle} {
-        System.out.println("Changing from YYINITIAL to TITLE");
+        //System.out.println("TITLE");
         yybegin(TITLE);
-        return symbol(LabSymbols.TITLE);
+        return symbol(LabParserSym.TITLE);
     }
     {BeforeSheet} {
-        System.out.println("BEGIN");
-        System.out.println("Changing from YYINITIAL to SHEET");
         yybegin(SHEET);
-        return symbol(LabSymbols.BEGIN);
+        //System.out.println("BEGIN");
+        return symbol(LabParserSym.BEGIN);
     }
 }
 
@@ -67,36 +70,77 @@ BeforeSheet = {WhiteSpace}* "\\begin" {SquareString}? "\{labletsheet\}"
         string.setLength(0);
     }
     [\}] {
-        System.out.println("Changing from TITLE to TITLED");
         yybegin(TITLED);
-        return symbol(LabSymbols.STRING, string.toString());
     }
     [^\{\}]+ {
-        System.out.println(yytext());
-        string.append(yytext());
+        System.out.print("Lablet = {\n    interface = 1.0,\n    title = ");
+        System.out.print("\""+yytext()+"\"\n}\n\n\n");
     }
 }
 
 <TITLED> {
     {Line} { /* System.out.println("LINE: "+yytext()); */ }
     {BeforeSheet} {
-        System.out.println("BEGIN");
-        System.out.println("Changing from TITLED to SHEET");
         yybegin(SHEET);
-        return symbol(LabSymbols.BEGIN);
+        //System.out.println("BEGIN");
+        return symbol(LabParserSym.BEGIN);
     }
 }
 
 <SHEET> {
-    [^] {
-        System.out.print(yytext());
+    "{" {
+        //System.out.println("LCURLY");
+        return symbol(LabParserSym.LCURLY);
+    }
+    "}" {WhiteSpace}* {
+        //System.out.println("RCURLY");
+        return symbol(LabParserSym.RCURLY);
+    }
+    [a-zA-Z0-9] {
+        string.setLength(0);
+        yybegin(STRING);
+        yypushback(1);
+    }
+    [^\{\}] {
+        //System.out.print(yytext());
+    }
+    {LabletText} {
+        return symbol(LabParserSym.LABLETTEXT);
+    }
+    {LabletHeader} {
+        return symbol(LabParserSym.LABLETHEADER);
+    }
+    {HorizontalTwo} {
+        return symbol(LabParserSym.HORIZONTALTWO);
     }
     "\\end"	{SquareString}? "\{lablet\}" {
-        System.out.println("END");
-        System.out.println("Changing from SHEET to TITLED");
         yybegin(TITLED);
-        return symbol(LabSymbols.END);
+        //System.out.println("END");
+        return symbol(LabParserSym.END);
+    }
+    [^] {
+        System.out.println("Found an unknown thing: "+yytext());
     }
 }
 
-<<EOF>> { return symbol(LabSymbols.EOF); }
+<STRING> {
+    [\}] {
+        yybegin(SHEET);
+        yypushback(1);
+        //System.out.println("STRING "+string.toString());
+        return symbol(LabParserSym.STRING, string.toString());
+    }
+    {WhiteSpace}+ {
+        // System.out.println("Found a whitespace thing: "+yytext());
+        string.append(' ');
+    }
+    [^\} \n\r\t\f] {
+        // System.out.println("Found a non-string thing: "+yytext());
+        string.append(yytext());
+    }
+    [^] {
+        System.out.println("Found an unknown thing: "+yytext());
+    }
+}
+
+<<EOF>> { return symbol(LabParserSym.EOF); }
