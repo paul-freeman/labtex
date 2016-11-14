@@ -42,10 +42,10 @@ begin ::=
             {:
                 ++sheetnumber;
                 System.out.println();
-                System.out.println("    -- SHEET "+sheetnumber);
-                System.out.println("    local sheet"+sheetnumber+" = builder:create(\"Sheet\")");
-                System.out.println("    builder:add(sheet"+sheetnumber+")");
-                System.out.println("    sheet"+sheetnumber+":setTitle(\""+s+"\")\n");
+                System.out.println("\t-- SHEET "+sheetnumber);
+                System.out.println("\tlocal sheet = builder:create(\"Sheet\")");
+                System.out.println("\tbuilder:add(sheet)");
+                System.out.println("\tsheet:setTitle(\""+s+"\")\n");
             :}
             RCURLY
             |
@@ -53,9 +53,9 @@ begin ::=
             {:
                 ++sheetnumber;
                 System.out.println();
-                System.out.println("    -- SHEET "+sheetnumber);
-                System.out.println("    local sheet"+sheetnumber+" = builder:create(\"Sheet\")");
-                System.out.println("    builder:add(sheet"+sheetnumber+")");
+                System.out.println("\t-- SHEET "+sheetnumber);
+                System.out.println("\tlocal sheet = builder:create(\"Sheet\")");
+                System.out.println("\tbuilder:add(sheet)");
             :}
             ;
 elems ::=
@@ -64,19 +64,19 @@ elems ::=
 elem ::=
             LABLETTEXT LCURLY STRING:s
             {:
-                System.out.println("    sheet"+sheetnumber+":addText(\""+s+"\")");
+                System.out.println("\tsheet:addText(\""+s+"\")");
             :}
             RCURLY
             |
             LABLETHEADER LCURLY STRING:s
             {:
-                System.out.println("    sheet"+sheetnumber+":addHeader(\""+s+"\")");
+                System.out.println("\tsheet:addHeader(\""+s+"\")");
             :}
             RCURLY
             |
             LABLETCHECK LCURLY STRING:s
             {:
-                System.out.println("    sheet"+sheetnumber+":addCheckQuestion(\""+s+"\")");
+                System.out.println("\tsheet:addCheckQuestion(\""+s+"\")");
             :}
             RCURLY
             |
@@ -88,19 +88,19 @@ named_elems ::=
 named_elem ::=
             LABLETTEXT LCURLY STRING:s
             {:
-                System.out.println("    sheet"+sheetnumber+":addText(\""+s+"\", "+element+")");
+                System.out.println("\tsheet:addText(\""+s+"\", "+element+")");
             :}
             RCURLY
             |
             LABLETHEADER LCURLY STRING:s
             {:
-                System.out.println("    sheet"+sheetnumber+":addHeader(\""+s+"\", "+element+")");
+                System.out.println("\tsheet:addHeader(\""+s+"\", "+element+")");
             :}
             RCURLY
             |
             LABLETCHECK LCURLY STRING:s
             {:
-                System.out.println("    sheet"+sheetnumber+":addCheckQuestion(\""+s+"\", "+element+")");
+                System.out.println("\tsheet:addCheckQuestion(\""+s+"\", "+element+")");
             :}
             RCURLY
             |
@@ -111,9 +111,9 @@ horizontal ::=
             {:
                 Integer h = ++horizontalnumber;
                 Integer n = sheetnumber;
-                element = "horizontalLayout" + h;
+                element = "horizontalLayout";
                 System.out.println();
-                System.out.println("    local "+element+" = sheet"+n+":addHorizontalGroupLayout()");
+                System.out.println("\tlocal "+element+" = sheet:addHorizontalGroupLayout()");
             :}
             LCURLY vertical RCURLY
             LCURLY vertical RCURLY
@@ -122,9 +122,9 @@ vertical ::=
             {:
                 Integer v = ++verticalnumber;
                 prev = element;
-                element = "verticalLayout" + v;
+                element = "verticalLayout";
                 System.out.println();
-                System.out.println("    local "+element+" = sheet:addVerticalGroupLayout("+prev+")");
+                System.out.println("\tlocal "+element+" = sheet:addVerticalGroupLayout("+prev+")");
             :}
             named_elems
             {: element = prev; :}

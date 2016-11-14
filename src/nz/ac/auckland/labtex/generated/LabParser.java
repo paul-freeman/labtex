@@ -275,10 +275,10 @@ class CUP$LabParser$actions {
 
                 ++sheetnumber;
                 System.out.println();
-                System.out.println("    -- SHEET "+sheetnumber);
-                System.out.println("    local sheet"+sheetnumber+" = builder:create(\"Sheet\")");
-                System.out.println("    builder:add(sheet"+sheetnumber+")");
-                System.out.println("    sheet"+sheetnumber+":setTitle(\""+s+"\")\n");
+                System.out.println("\t-- SHEET "+sheetnumber);
+                System.out.println("\tlocal sheet = builder:create(\"Sheet\")");
+                System.out.println("\tbuilder:add(sheet)");
+                System.out.println("\tsheet:setTitle(\""+s+"\")\n");
             
               CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$2",11, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
@@ -305,9 +305,9 @@ class CUP$LabParser$actions {
 		
                 ++sheetnumber;
                 System.out.println();
-                System.out.println("    -- SHEET "+sheetnumber);
-                System.out.println("    local sheet"+sheetnumber+" = builder:create(\"Sheet\")");
-                System.out.println("    builder:add(sheet"+sheetnumber+")");
+                System.out.println("\t-- SHEET "+sheetnumber);
+                System.out.println("\tlocal sheet = builder:create(\"Sheet\")");
+                System.out.println("\tbuilder:add(sheet)");
             
               CUP$LabParser$result = parser.getSymbolFactory().newSymbol("begin",6, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
@@ -339,7 +339,7 @@ class CUP$LabParser$actions {
 		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).right;
 		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.peek()).value;
 
-                System.out.println("    sheet"+sheetnumber+":addText(\""+s+"\")");
+                System.out.println("\tsheet:addText(\""+s+"\")");
             
               CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$3",12, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
@@ -367,7 +367,7 @@ class CUP$LabParser$actions {
 		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).right;
 		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.peek()).value;
 
-                System.out.println("    sheet"+sheetnumber+":addHeader(\""+s+"\")");
+                System.out.println("\tsheet:addHeader(\""+s+"\")");
             
               CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$4",13, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
@@ -395,7 +395,7 @@ class CUP$LabParser$actions {
 		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).right;
 		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.peek()).value;
 
-                System.out.println("    sheet"+sheetnumber+":addCheckQuestion(\""+s+"\")");
+                System.out.println("\tsheet:addCheckQuestion(\""+s+"\")");
             
               CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$5",14, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
@@ -450,7 +450,7 @@ class CUP$LabParser$actions {
 		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).right;
 		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.peek()).value;
 
-                System.out.println("    sheet"+sheetnumber+":addText(\""+s+"\", "+element+")");
+                System.out.println("\tsheet:addText(\""+s+"\", "+element+")");
             
               CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$6",15, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
@@ -478,7 +478,7 @@ class CUP$LabParser$actions {
 		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).right;
 		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.peek()).value;
 
-                System.out.println("    sheet"+sheetnumber+":addHeader(\""+s+"\", "+element+")");
+                System.out.println("\tsheet:addHeader(\""+s+"\", "+element+")");
             
               CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$7",16, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
@@ -506,7 +506,7 @@ class CUP$LabParser$actions {
 		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).right;
 		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.peek()).value;
 
-                System.out.println("    sheet"+sheetnumber+":addCheckQuestion(\""+s+"\", "+element+")");
+                System.out.println("\tsheet:addCheckQuestion(\""+s+"\", "+element+")");
             
               CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$8",17, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
@@ -542,9 +542,9 @@ class CUP$LabParser$actions {
 
                 Integer h = ++horizontalnumber;
                 Integer n = sheetnumber;
-                element = "horizontalLayout" + h;
+                element = "horizontalLayout";
                 System.out.println();
-                System.out.println("    local "+element+" = sheet"+n+":addHorizontalGroupLayout()");
+                System.out.println("\tlocal "+element+" = sheet:addHorizontalGroupLayout()");
             
               CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$9",18, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
@@ -568,9 +568,9 @@ class CUP$LabParser$actions {
 
                 Integer v = ++verticalnumber;
                 prev = element;
-                element = "verticalLayout" + v;
+                element = "verticalLayout";
                 System.out.println();
-                System.out.println("    local "+element+" = sheet:addVerticalGroupLayout("+prev+")");
+                System.out.println("\tlocal "+element+" = sheet:addVerticalGroupLayout("+prev+")");
             
               CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$10",19, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
