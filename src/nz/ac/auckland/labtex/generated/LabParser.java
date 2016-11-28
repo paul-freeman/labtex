@@ -31,17 +31,19 @@ public class LabParser extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\040\000\002\013\002\000\002\002\005\000\002\002" +
-    "\004\000\002\014\002\000\002\002\004\000\002\003\006" +
-    "\000\002\003\005\000\002\015\002\000\002\010\007\000" +
-    "\002\010\003\000\002\005\004\000\002\005\003\000\002" +
-    "\016\002\000\002\004\007\000\002\017\002\000\002\004" +
-    "\007\000\002\020\002\000\002\004\007\000\002\004\003" +
-    "\000\002\007\004\000\002\007\003\000\002\021\002\000" +
-    "\002\006\007\000\002\022\002\000\002\006\007\000\002" +
-    "\023\002\000\002\006\007\000\002\006\003\000\002\024" +
-    "\002\000\002\011\012\000\002\025\002\000\002\012\004" +
-    "" });
+    "\000\047\000\002\002\004\000\002\002\004\000\002\002" +
+    "\003\000\002\015\002\000\002\003\004\000\002\004\006" +
+    "\000\002\004\005\000\002\011\003\000\002\016\002\000" +
+    "\002\011\007\000\002\011\003\000\002\017\002\000\002" +
+    "\011\007\000\002\006\004\000\002\006\003\000\002\020" +
+    "\002\000\002\005\007\000\002\021\002\000\002\005\007" +
+    "\000\002\022\002\000\002\005\007\000\002\023\002\000" +
+    "\002\005\012\000\002\005\003\000\002\010\004\000\002" +
+    "\010\003\000\002\024\002\000\002\007\007\000\002\025" +
+    "\002\000\002\007\007\000\002\026\002\000\002\007\007" +
+    "\000\002\007\003\000\002\027\002\000\002\013\012\000" +
+    "\002\030\002\000\002\013\015\000\002\031\002\000\002" +
+    "\014\004" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -49,48 +51,69 @@ public class LabParser extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\101\000\006\004\006\005\ufffe\001\002\000\004\005" +
-    "\011\001\002\000\004\002\102\001\002\000\004\005\001" +
-    "\001\002\000\004\005\011\001\002\000\012\011\022\012" +
-    "\016\013\017\014\021\001\002\000\014\007\074\011\ufff8" +
-    "\012\ufff8\013\ufff8\014\ufff8\001\002\000\006\002\000\005" +
-    "\011\001\002\000\012\011\022\012\016\013\017\014\021" +
-    "\001\002\000\014\006\uffef\011\uffef\012\uffef\013\uffef\014" +
-    "\uffef\001\002\000\004\006\073\001\002\000\004\007\067" +
-    "\001\002\000\004\007\063\001\002\000\014\006\ufff6\011" +
-    "\022\012\016\013\017\014\021\001\002\000\004\007\uffe5" +
-    "\001\002\000\004\007\023\001\002\000\004\015\024\001" +
-    "\002\000\004\010\ufff5\001\002\000\004\010\026\001\002" +
-    "\000\014\006\ufff4\011\ufff4\012\ufff4\013\ufff4\014\ufff4\001" +
-    "\002\000\004\007\030\001\002\000\012\011\uffe3\012\uffe3" +
-    "\013\uffe3\014\uffe3\001\002\000\012\011\044\012\040\013" +
-    "\041\014\021\001\002\000\004\010\033\001\002\000\004" +
-    "\007\034\001\002\000\012\011\uffe3\012\uffe3\013\uffe3\014" +
-    "\uffe3\001\002\000\004\010\036\001\002\000\016\006\uffe4" +
-    "\010\uffe4\011\uffe4\012\uffe4\013\uffe4\014\uffe4\001\002\000" +
-    "\014\010\uffe6\011\uffe6\012\uffe6\013\uffe6\014\uffe6\001\002" +
-    "\000\004\007\056\001\002\000\004\007\052\001\002\000" +
-    "\004\010\uffe2\001\002\000\014\010\uffed\011\044\012\040" +
-    "\013\041\014\021\001\002\000\004\007\045\001\002\000" +
-    "\004\015\046\001\002\000\004\010\uffec\001\002\000\004" +
-    "\010\050\001\002\000\014\010\uffeb\011\uffeb\012\uffeb\013" +
-    "\uffeb\014\uffeb\001\002\000\004\010\uffee\001\002\000\004" +
-    "\015\053\001\002\000\004\010\uffe8\001\002\000\004\010" +
-    "\055\001\002\000\014\010\uffe7\011\uffe7\012\uffe7\013\uffe7" +
-    "\014\uffe7\001\002\000\004\015\057\001\002\000\004\010" +
-    "\uffea\001\002\000\004\010\061\001\002\000\014\010\uffe9" +
-    "\011\uffe9\012\uffe9\013\uffe9\014\uffe9\001\002\000\004\006" +
-    "\ufff7\001\002\000\004\015\064\001\002\000\004\010\ufff1" +
-    "\001\002\000\004\010\066\001\002\000\014\006\ufff0\011" +
-    "\ufff0\012\ufff0\013\ufff0\014\ufff0\001\002\000\004\015\070" +
-    "\001\002\000\004\010\ufff3\001\002\000\004\010\072\001" +
-    "\002\000\014\006\ufff2\011\ufff2\012\ufff2\013\ufff2\014\ufff2" +
-    "\001\002\000\006\002\ufffc\005\ufffc\001\002\000\004\015" +
-    "\075\001\002\000\004\010\ufffa\001\002\000\004\010\077" +
-    "\001\002\000\012\011\ufff9\012\ufff9\013\ufff9\014\ufff9\001" +
-    "\002\000\004\006\101\001\002\000\006\002\ufffb\005\ufffb" +
-    "\001\002\000\004\002\uffff\001\002\000\006\002\ufffd\005" +
-    "\011\001\002" });
+    "\000\131\000\010\004\007\005\ufffe\021\ufffe\001\002\000" +
+    "\006\005\014\021\012\001\002\000\004\002\011\001\002" +
+    "\000\004\002\uffff\001\002\000\006\005\ufffe\021\ufffe\001" +
+    "\002\000\004\002\001\001\002\000\004\002\000\001\002" +
+    "\000\020\007\130\011\ufff7\012\ufff7\013\ufff7\014\ufff7\015" +
+    "\ufff7\016\ufff7\001\002\000\016\011\023\012\025\013\027" +
+    "\014\026\015\021\016\024\001\002\000\020\007\122\011" +
+    "\ufffa\012\ufffa\013\ufffa\014\ufffa\015\ufffa\016\ufffa\001\002" +
+    "\000\010\002\ufffd\005\014\021\012\001\002\000\016\011" +
+    "\023\012\025\013\027\014\026\015\021\016\024\001\002" +
+    "\000\020\006\uffea\011\uffea\012\uffea\013\uffea\014\uffea\015" +
+    "\uffea\016\uffea\001\002\000\004\006\121\001\002\000\004" +
+    "\007\uffe0\001\002\000\020\006\ufff3\011\023\012\025\013" +
+    "\027\014\026\015\021\016\024\001\002\000\004\007\105" +
+    "\001\002\000\004\007\uffde\001\002\000\004\007\043\001" +
+    "\002\000\004\007\034\001\002\000\004\007\030\001\002" +
+    "\000\004\017\031\001\002\000\004\010\uffee\001\002\000" +
+    "\004\010\033\001\002\000\020\006\uffed\011\uffed\012\uffed" +
+    "\013\uffed\014\uffed\015\uffed\016\uffed\001\002\000\004\017" +
+    "\035\001\002\000\004\010\036\001\002\000\004\007\037" +
+    "\001\002\000\004\017\040\001\002\000\004\010\uffec\001" +
+    "\002\000\004\010\042\001\002\000\020\006\uffeb\011\uffeb" +
+    "\012\uffeb\013\uffeb\014\uffeb\015\uffeb\016\uffeb\001\002\000" +
+    "\004\017\044\001\002\000\004\010\ufff0\001\002\000\004" +
+    "\010\046\001\002\000\020\006\uffef\011\uffef\012\uffef\013" +
+    "\uffef\014\uffef\015\uffef\016\uffef\001\002\000\004\007\050" +
+    "\001\002\000\014\011\uffdc\012\uffdc\013\uffdc\015\uffdc\016" +
+    "\uffdc\001\002\000\004\010\076\001\002\000\014\011\060" +
+    "\012\054\013\055\015\021\016\024\001\002\000\016\010" +
+    "\uffe1\011\uffe1\012\uffe1\013\uffe1\015\uffe1\016\uffe1\001\002" +
+    "\000\004\007\072\001\002\000\004\007\066\001\002\000" +
+    "\004\010\uffdb\001\002\000\016\010\uffe8\011\060\012\054" +
+    "\013\055\015\021\016\024\001\002\000\004\007\061\001" +
+    "\002\000\004\017\062\001\002\000\004\010\uffe7\001\002" +
+    "\000\004\010\064\001\002\000\016\010\uffe6\011\uffe6\012" +
+    "\uffe6\013\uffe6\015\uffe6\016\uffe6\001\002\000\004\010\uffe9" +
+    "\001\002\000\004\017\067\001\002\000\004\010\uffe3\001" +
+    "\002\000\004\010\071\001\002\000\016\010\uffe2\011\uffe2" +
+    "\012\uffe2\013\uffe2\015\uffe2\016\uffe2\001\002\000\004\017" +
+    "\073\001\002\000\004\010\uffe5\001\002\000\004\010\075" +
+    "\001\002\000\016\010\uffe4\011\uffe4\012\uffe4\013\uffe4\015" +
+    "\uffe4\016\uffe4\001\002\000\004\007\077\001\002\000\014" +
+    "\011\uffdc\012\uffdc\013\uffdc\015\uffdc\016\uffdc\001\002\000" +
+    "\004\010\101\001\002\000\004\007\102\001\002\000\014" +
+    "\011\uffdc\012\uffdc\013\uffdc\015\uffdc\016\uffdc\001\002\000" +
+    "\004\010\104\001\002\000\022\006\uffdd\010\uffdd\011\uffdd" +
+    "\012\uffdd\013\uffdd\014\uffdd\015\uffdd\016\uffdd\001\002\000" +
+    "\004\017\106\001\002\000\004\010\ufff2\001\002\000\004" +
+    "\010\110\001\002\000\020\006\ufff1\011\ufff1\012\ufff1\013" +
+    "\ufff1\014\ufff1\015\ufff1\016\ufff1\001\002\000\004\006\ufff4" +
+    "\001\002\000\004\007\113\001\002\000\014\011\uffdc\012" +
+    "\uffdc\013\uffdc\015\uffdc\016\uffdc\001\002\000\004\010\115" +
+    "\001\002\000\004\007\116\001\002\000\014\011\uffdc\012" +
+    "\uffdc\013\uffdc\015\uffdc\016\uffdc\001\002\000\004\010\120" +
+    "\001\002\000\022\006\uffdf\010\uffdf\011\uffdf\012\uffdf\013" +
+    "\uffdf\014\uffdf\015\uffdf\016\uffdf\001\002\000\010\002\ufffc" +
+    "\005\ufffc\021\ufffc\001\002\000\004\017\123\001\002\000" +
+    "\004\010\ufff9\001\002\000\004\010\125\001\002\000\016" +
+    "\011\ufff8\012\ufff8\013\ufff8\014\ufff8\015\ufff8\016\ufff8\001" +
+    "\002\000\004\006\127\001\002\000\010\002\ufffb\005\ufffb" +
+    "\021\ufffb\001\002\000\004\017\131\001\002\000\004\010" +
+    "\ufff6\001\002\000\004\010\133\001\002\000\016\011\ufff5" +
+    "\012\ufff5\013\ufff5\014\ufff5\015\ufff5\016\ufff5\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -98,32 +121,41 @@ public class LabParser extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\101\000\006\002\004\014\003\001\001\000\006\003" +
-    "\102\010\007\001\001\000\002\001\001\000\004\013\006" +
-    "\001\001\000\006\003\011\010\007\001\001\000\010\004" +
-    "\017\005\077\011\013\001\001\000\002\001\001\000\004" +
-    "\010\012\001\001\000\010\004\017\005\014\011\013\001" +
-    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "\000\002\001\001\000\010\004\017\005\061\011\013\001" +
-    "\001\000\004\024\026\001\001\000\002\001\001\000\002" +
-    "\001\001\000\004\016\024\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001\000\006\012\031\025\030" +
-    "\001\001\000\010\006\042\007\041\011\036\001\001\000" +
-    "\002\001\001\000\002\001\001\000\006\012\034\025\030" +
-    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
-    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "\000\010\006\042\007\050\011\036\001\001\000\002\001" +
-    "\001\000\002\001\001\000\004\021\046\001\001\000\002" +
-    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
-    "\001\000\004\023\053\001\001\000\002\001\001\000\002" +
-    "\001\001\000\002\001\001\000\004\022\057\001\001\000" +
+    "\000\131\000\010\002\004\003\005\015\003\001\001\000" +
+    "\006\004\014\011\012\001\001\000\002\001\001\000\002" +
+    "\001\001\000\006\003\007\015\003\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\010\005\021" +
+    "\006\125\013\016\001\001\000\002\001\001\000\004\011" +
+    "\015\001\001\000\010\005\021\006\017\013\016\001\001" +
+    "\000\002\001\001\000\002\001\001\000\004\027\111\001" +
+    "\001\000\010\005\021\006\110\013\016\001\001\000\002" +
+    "\001\001\000\004\030\046\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001\000\002\001\001\000\004" +
+    "\022\031\001\001\000\002\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\004\020\064\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001\000\004\017\070\001\001" +
+    "\001\001\000\004\023\040\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001\000\004\021\044\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\002\001\001\000\004\015\075\001\001\000\002\001\001" +
+    "\006\014\050\031\051\001\001\000\002\001\001\000\010" +
+    "\007\056\010\055\013\052\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001\000\002\001\001\000\010" +
+    "\007\056\010\064\013\052\001\001\000\002\001\001\000" +
+    "\002\001\001\000\004\024\062\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\002\001\001\000\004\010\012\001\001" });
+    "\004\026\067\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\004\025\073\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\006\014\077" +
+    "\031\051\001\001\000\002\001\001\000\002\001\001\000" +
+    "\006\014\102\031\051\001\001\000\002\001\001\000\002" +
+    "\001\001\000\002\001\001\000\004\020\106\001\001\000" +
+    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001\000\006\014\113\031\051\001\001\000\002\001" +
+    "\001\000\002\001\001\000\006\014\116\031\051\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
+    "\002\001\001\000\004\016\123\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
+    "\002\001\001\000\004\017\131\001\001\000\002\001\001" +
+    "\000\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -152,7 +184,7 @@ public class LabParser extends java_cup.runtime.lr_parser {
   /** Indicates start state. */
   public int start_state() {return 0;}
   /** Indicates start production. */
-  public int start_production() {return 2;}
+  public int start_production() {return 1;}
 
   /** <code>EOF</code> Symbol index. */
   public int EOF_sym() {return 0;}
@@ -169,6 +201,7 @@ class CUP$LabParser$actions {
     Integer sheetnumber = 0;
     Integer horizontalnumber = 0;
     Integer verticalnumber = 0;
+    Integer videonumber = 0;
     String element = null;
     String prev = null;
 
@@ -194,27 +227,16 @@ class CUP$LabParser$actions {
       switch (CUP$LabParser$act_num)
         {
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 0: // NT$0 ::= 
+          case 0: // lab ::= TITLE rest 
             {
               Object RESULT =null;
- System.out.println("function Lablet.buildActivity(builder)"); 
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$0",9, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("lab",0, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-1)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 1: // lab ::= TITLE NT$0 sheets 
-            {
-              Object RESULT =null;
-              // propagate RESULT from NT$0
-                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-1)).value;
-		 System.out.println("end"); 
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("lab",0, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
-            }
-          return CUP$LabParser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 2: // $START ::= lab EOF 
+          case 1: // $START ::= lab EOF 
             {
               Object RESULT =null;
 		int start_valleft = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-1)).left;
@@ -228,22 +250,31 @@ class CUP$LabParser$actions {
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 3: // NT$1 ::= 
+          case 2: // lab ::= rest 
             {
               Object RESULT =null;
- System.out.println("function Lablet.buildActivity(builder)"); 
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$1",10, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("lab",0, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 4: // lab ::= NT$1 sheets 
+          case 3: // NT$0 ::= 
             {
               Object RESULT =null;
-              // propagate RESULT from NT$1
+ System.out.println("function Lablet.buildActivity(builder)"); 
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$0",11, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+            }
+          return CUP$LabParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 4: // rest ::= NT$0 sheets 
+            {
+              Object RESULT =null;
+              // propagate RESULT from NT$0
                 RESULT = (Object) ((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-1)).value;
 		 System.out.println("end"); 
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("lab",0, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-1)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("rest",1, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-1)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
@@ -252,7 +283,7 @@ class CUP$LabParser$actions {
             {
               Object RESULT =null;
 
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("sheets",1, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-3)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("sheets",2, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-3)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
@@ -261,12 +292,27 @@ class CUP$LabParser$actions {
             {
               Object RESULT =null;
 
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("sheets",1, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("sheets",2, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 7: // NT$2 ::= 
+          case 7: // begin ::= BEGIN 
+            {
+              Object RESULT =null;
+		
+                ++sheetnumber;
+                System.out.println();
+                System.out.println("\t-- SHEET "+sheetnumber);
+                System.out.println("\tlocal sheet = builder:create(\"Sheet\")");
+                System.out.println("\tbuilder:add(sheet)");
+            
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("begin",7, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+            }
+          return CUP$LabParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 8: // NT$1 ::= 
             {
               Object RESULT =null;
 		int sleft = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).left;
@@ -280,59 +326,125 @@ class CUP$LabParser$actions {
                 System.out.println("\tbuilder:add(sheet)");
                 System.out.println("\tsheet:setTitle(\""+s+"\")\n");
             
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$2",11, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$1",12, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 8: // begin ::= BEGIN LCURLY STRING NT$2 RCURLY 
+          case 9: // begin ::= BEGIN LCURLY STRING NT$1 RCURLY 
             {
               Object RESULT =null;
-              // propagate RESULT from NT$2
+              // propagate RESULT from NT$1
                 RESULT = (Object) ((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-1)).value;
 		int sleft = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).left;
 		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).right;
 		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).value;
 
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("begin",6, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-4)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("begin",7, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-4)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 9: // begin ::= BEGIN 
+          case 10: // begin ::= VIDEO_OP 
             {
               Object RESULT =null;
+		int sleft = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.peek()).value;
 		
                 ++sheetnumber;
                 System.out.println();
                 System.out.println("\t-- SHEET "+sheetnumber);
                 System.out.println("\tlocal sheet = builder:create(\"Sheet\")");
                 System.out.println("\tbuilder:add(sheet)");
+                String key = new String("sheet_orientation");
+                int x = s.indexOf(key);
+                if (x != -1) {
+                    s = s.substring(x);
+                    x = s.indexOf(",");
+                    if (x != -1) {
+                        s = s.substring(0,x);
+                    }
+                    if (s.indexOf("horizontal") != -1) {
+                        System.out.println("\tsheet:setMainLayoutOrientation(\"horizontal\")");
+                    }
+                }
             
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("begin",6, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("begin",7, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 10: // elems ::= elem elems 
+          case 11: // NT$2 ::= 
+            {
+              Object RESULT =null;
+		int sleft = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).value;
+		int tleft = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).left;
+		int tright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).right;
+		String t = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.peek()).value;
+
+                ++sheetnumber;
+                System.out.println();
+                System.out.println("\t-- SHEET "+sheetnumber);
+                System.out.println("\tlocal sheet = builder:create(\"Sheet\")");
+                System.out.println("\tbuilder:add(sheet)");
+                System.out.println("\tsheet:setTitle(\""+t+"\")\n");
+                String key = new String("sheet_orientation");
+                int x = s.indexOf(key);
+                if (x != -1) {
+                    s = s.substring(x);
+                    x = s.indexOf(",");
+                    if (x != -1) {
+                        s = s.substring(0,x);
+                    }
+                    if (s.indexOf("horizontal") != -1) {
+                        System.out.println("\tsheet:setMainLayoutOrientation(\"horizontal\")");
+                    }
+                }
+            
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$2",13, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+            }
+          return CUP$LabParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 12: // begin ::= VIDEO_OP LCURLY STRING NT$2 RCURLY 
+            {
+              Object RESULT =null;
+              // propagate RESULT from NT$2
+                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-1)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-4)).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-4)).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-4)).value;
+		int tleft = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).left;
+		int tright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).right;
+		String t = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).value;
+
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("begin",7, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-4)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+            }
+          return CUP$LabParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 13: // elems ::= elem elems 
             {
               Object RESULT =null;
 
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("elems",3, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-1)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("elems",4, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-1)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 11: // elems ::= elem 
+          case 14: // elems ::= elem 
             {
               Object RESULT =null;
 
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("elems",3, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("elems",4, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 12: // NT$3 ::= 
+          case 15: // NT$3 ::= 
             {
               Object RESULT =null;
 		int sleft = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).left;
@@ -341,12 +453,12 @@ class CUP$LabParser$actions {
 
                 System.out.println("\tsheet:addText(\""+s+"\")");
             
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$3",12, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$3",14, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 13: // elem ::= LABLETTEXT LCURLY STRING NT$3 RCURLY 
+          case 16: // elem ::= LABLETTEXT LCURLY STRING NT$3 RCURLY 
             {
               Object RESULT =null;
               // propagate RESULT from NT$3
@@ -355,12 +467,12 @@ class CUP$LabParser$actions {
 		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).right;
 		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).value;
 
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("elem",2, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-4)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("elem",3, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-4)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 14: // NT$4 ::= 
+          case 17: // NT$4 ::= 
             {
               Object RESULT =null;
 		int sleft = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).left;
@@ -369,12 +481,12 @@ class CUP$LabParser$actions {
 
                 System.out.println("\tsheet:addHeader(\""+s+"\")");
             
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$4",13, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$4",15, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 15: // elem ::= LABLETHEADER LCURLY STRING NT$4 RCURLY 
+          case 18: // elem ::= LABLETHEADER LCURLY STRING NT$4 RCURLY 
             {
               Object RESULT =null;
               // propagate RESULT from NT$4
@@ -383,12 +495,12 @@ class CUP$LabParser$actions {
 		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).right;
 		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).value;
 
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("elem",2, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-4)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("elem",3, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-4)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 16: // NT$5 ::= 
+          case 19: // NT$5 ::= 
             {
               Object RESULT =null;
 		int sleft = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).left;
@@ -397,12 +509,12 @@ class CUP$LabParser$actions {
 
                 System.out.println("\tsheet:addCheckQuestion(\""+s+"\")");
             
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$5",14, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$5",16, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 17: // elem ::= LABLETCHECK LCURLY STRING NT$5 RCURLY 
+          case 20: // elem ::= LABLETCHECK LCURLY STRING NT$5 RCURLY 
             {
               Object RESULT =null;
               // propagate RESULT from NT$5
@@ -411,39 +523,76 @@ class CUP$LabParser$actions {
 		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).right;
 		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).value;
 
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("elem",2, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-4)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
-            }
-          return CUP$LabParser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 18: // elem ::= horizontal 
-            {
-              Object RESULT =null;
-
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("elem",2, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
-            }
-          return CUP$LabParser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 19: // named_elems ::= named_elem named_elems 
-            {
-              Object RESULT =null;
-
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("named_elems",5, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-1)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
-            }
-          return CUP$LabParser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 20: // named_elems ::= named_elem 
-            {
-              Object RESULT =null;
-
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("named_elems",5, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("elem",3, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-4)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 21: // NT$6 ::= 
+            {
+              Object RESULT =null;
+		int s1left = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-3)).left;
+		int s1right = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-3)).right;
+		String s1 = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-3)).value;
+		int s2left = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).left;
+		int s2right = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).right;
+		String s2 = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.peek()).value;
+
+                ++videonumber;
+                System.out.println("\tlocal cameraExperiment"+videonumber+" = sheet:addCameraExperiment()");
+                System.out.println("\tcameraExperiment"+videonumber+":setDescriptionText(\""+s2+"\")");
+                System.out.println("\t"+s1+" = cameraExperiment"+videonumber+":getExperiment()");
+            
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$6",17, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+            }
+          return CUP$LabParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 22: // elem ::= LABLETVIDEO LCURLY STRING RCURLY LCURLY STRING NT$6 RCURLY 
+            {
+              Object RESULT =null;
+              // propagate RESULT from NT$6
+                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-1)).value;
+		int s1left = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-5)).left;
+		int s1right = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-5)).right;
+		String s1 = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-5)).value;
+		int s2left = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).left;
+		int s2right = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).right;
+		String s2 = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).value;
+
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("elem",3, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-7)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+            }
+          return CUP$LabParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 23: // elem ::= horizontal 
+            {
+              Object RESULT =null;
+
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("elem",3, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+            }
+          return CUP$LabParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 24: // named_elems ::= named_elem named_elems 
+            {
+              Object RESULT =null;
+
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("named_elems",6, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-1)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+            }
+          return CUP$LabParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 25: // named_elems ::= named_elem 
+            {
+              Object RESULT =null;
+
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("named_elems",6, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+            }
+          return CUP$LabParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 26: // NT$7 ::= 
             {
               Object RESULT =null;
 		int sleft = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).left;
@@ -452,40 +601,12 @@ class CUP$LabParser$actions {
 
                 System.out.println("\tsheet:addText(\""+s+"\", "+element+")");
             
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$6",15, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$7",18, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 22: // named_elem ::= LABLETTEXT LCURLY STRING NT$6 RCURLY 
-            {
-              Object RESULT =null;
-              // propagate RESULT from NT$6
-                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-1)).value;
-		int sleft = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).left;
-		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).right;
-		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).value;
-
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("named_elem",4, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-4)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
-            }
-          return CUP$LabParser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 23: // NT$7 ::= 
-            {
-              Object RESULT =null;
-		int sleft = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).left;
-		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).right;
-		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.peek()).value;
-
-                System.out.println("\tsheet:addHeader(\""+s+"\", "+element+")");
-            
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$7",16, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
-            }
-          return CUP$LabParser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 24: // named_elem ::= LABLETHEADER LCURLY STRING NT$7 RCURLY 
+          case 27: // named_elem ::= LABLETTEXT LCURLY STRING NT$7 RCURLY 
             {
               Object RESULT =null;
               // propagate RESULT from NT$7
@@ -494,26 +615,26 @@ class CUP$LabParser$actions {
 		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).right;
 		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).value;
 
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("named_elem",4, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-4)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("named_elem",5, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-4)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 25: // NT$8 ::= 
+          case 28: // NT$8 ::= 
             {
               Object RESULT =null;
 		int sleft = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).left;
 		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).right;
 		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.peek()).value;
 
-                System.out.println("\tsheet:addCheckQuestion(\""+s+"\", "+element+")");
+                System.out.println("\tsheet:addHeader(\""+s+"\", "+element+")");
             
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$8",17, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$8",19, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 26: // named_elem ::= LABLETCHECK LCURLY STRING NT$8 RCURLY 
+          case 29: // named_elem ::= LABLETHEADER LCURLY STRING NT$8 RCURLY 
             {
               Object RESULT =null;
               // propagate RESULT from NT$8
@@ -522,21 +643,49 @@ class CUP$LabParser$actions {
 		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).right;
 		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).value;
 
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("named_elem",4, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-4)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("named_elem",5, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-4)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 27: // named_elem ::= horizontal 
+          case 30: // NT$9 ::= 
+            {
+              Object RESULT =null;
+		int sleft = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.peek()).value;
+
+                System.out.println("\tsheet:addCheckQuestion(\""+s+"\", "+element+")");
+            
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$9",20, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+            }
+          return CUP$LabParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 31: // named_elem ::= LABLETCHECK LCURLY STRING NT$9 RCURLY 
+            {
+              Object RESULT =null;
+              // propagate RESULT from NT$9
+                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-1)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-2)).value;
+
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("named_elem",5, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-4)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+            }
+          return CUP$LabParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 32: // named_elem ::= horizontal 
             {
               Object RESULT =null;
 
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("named_elem",4, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("named_elem",5, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 28: // NT$9 ::= 
+          case 33: // NT$10 ::= 
             {
               Object RESULT =null;
 
@@ -546,23 +695,49 @@ class CUP$LabParser$actions {
                 System.out.println();
                 System.out.println("\tlocal "+element+" = sheet:addHorizontalGroupLayout()");
             
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$9",18, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$10",21, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 29: // horizontal ::= HORIZONTALTWO NT$9 LCURLY vertical RCURLY LCURLY vertical RCURLY 
+          case 34: // horizontal ::= HORIZONTALTWO NT$10 LCURLY vertical RCURLY LCURLY vertical RCURLY 
             {
               Object RESULT =null;
-              // propagate RESULT from NT$9
+              // propagate RESULT from NT$10
                 RESULT = (Object) ((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-6)).value;
 
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("horizontal",7, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-7)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("horizontal",9, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-7)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 30: // NT$10 ::= 
+          case 35: // NT$11 ::= 
+            {
+              Object RESULT =null;
+
+                Integer h = ++horizontalnumber;
+                Integer n = sheetnumber;
+                element = "horizontalLayout";
+                System.out.println();
+                System.out.println("\tlocal "+element+" = sheet:addHorizontalGroupLayout()");
+            
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$11",22, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+            }
+          return CUP$LabParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 36: // horizontal ::= HORIZONTALTHREE NT$11 LCURLY vertical RCURLY LCURLY vertical RCURLY LCURLY vertical RCURLY 
+            {
+              Object RESULT =null;
+              // propagate RESULT from NT$11
+                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-9)).value;
+
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("horizontal",9, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-10)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+            }
+          return CUP$LabParser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 37: // NT$12 ::= 
             {
               Object RESULT =null;
 
@@ -572,18 +747,18 @@ class CUP$LabParser$actions {
                 System.out.println();
                 System.out.println("\tlocal "+element+" = sheet:addVerticalGroupLayout("+prev+")");
             
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$10",19, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("NT$12",23, ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 31: // vertical ::= NT$10 named_elems 
+          case 38: // vertical ::= NT$12 named_elems 
             {
               Object RESULT =null;
-              // propagate RESULT from NT$10
+              // propagate RESULT from NT$12
                 RESULT = (Object) ((java_cup.runtime.Symbol) CUP$LabParser$stack.elementAt(CUP$LabParser$top-1)).value;
 		 element = prev; 
-              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("vertical",8, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-1)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
+              CUP$LabParser$result = parser.getSymbolFactory().newSymbol("vertical",10, ((java_cup.runtime.Symbol)CUP$LabParser$stack.elementAt(CUP$LabParser$top-1)), ((java_cup.runtime.Symbol)CUP$LabParser$stack.peek()), RESULT);
             }
           return CUP$LabParser$result;
 

@@ -35,13 +35,19 @@ Line = [^\r\n]* ~{LineTerminator}
 SquareString = "\[" [^\]]* "\]"
 CurlyString  = "\{" [^\}]* "\}"
 
-BeforeTitle   = {WhiteSpace}* "\\title"
-BeforeSheet   = {WhiteSpace}* "\\begin" {SquareString}? "\{labletsheet\}"
-EndSheet      = {WhiteSpace}* "\\end\{labletsheet\}"
-LabletText    = {WhiteSpace}* "\\lablettext" {SquareString}?
-LabletHeader  = {WhiteSpace}* "\\labletheader" {SquareString}?
-LabletCheck   = {WhiteSpace}* "\\labletcheck" {SquareString}?
-HorizontalTwo = {WhiteSpace}* "\\horizontaltwo"
+BeforeTitle     = {WhiteSpace}* "\\title"
+BeforeNormal    = {WhiteSpace}* "\\begin" {SquareString}? "\{labletsheet\}"
+BeforeVideo     = {WhiteSpace}* "\\begin\{labletvideopage\}"
+BeforeVideoOp   = {WhiteSpace}* "\\begin" {SquareString} "\{labletvideopage\}"
+EndSheet        = {WhiteSpace}* "\\end\{labletsheet\}"
+LabletText      = {WhiteSpace}* "\\lablettext" {SquareString}?
+LabletHeader    = {WhiteSpace}* "\\labletheader" {SquareString}?
+LabletCheck     = {WhiteSpace}* "\\labletcheck" {SquareString}?
+LabletVideo     = {WhiteSpace}* "\\labletvideo" {SquareString}?
+HorizontalTwo   = {WhiteSpace}* "\\horizontaltwo"
+HorizontalThree = {WhiteSpace}* "\\horizontalthree"
+
+BeforeSheet   = {BeforeNormal} | {BeforeVideo}
 
 %state TITLE
 %state TITLED
@@ -65,6 +71,13 @@ HorizontalTwo = {WhiteSpace}* "\\horizontaltwo"
         //System.out.println("BEGIN");
         return symbol(LabParserSym.BEGIN);
     }
+    {BeforeVideoOp} {
+        yybegin(SHEET);
+        //System.out.println("BEGIN");
+        String s = yytext().substring(7, yytext().length()-18);
+        System.out.println("SQUARE "+s);
+        return symbol(LabParserSym.VIDEO_OP, s);
+    }
 }
 
 <TITLE> {
@@ -76,7 +89,7 @@ HorizontalTwo = {WhiteSpace}* "\\horizontaltwo"
     }
     [^\{\}]+ {
         System.out.print("Lablet = {\n    interface = 1.0,\n    title = ");
-        System.out.print("\""+yytext()+"\"\n}\n\n\n");
+        System.out.print("\"(TeX) "+yytext()+"\"\n}\n\n\n");
     }
 }
 
@@ -87,15 +100,23 @@ HorizontalTwo = {WhiteSpace}* "\\horizontaltwo"
         //System.out.println("BEGIN");
         return symbol(LabParserSym.BEGIN);
     }
+    {BeforeVideoOp} {
+        yybegin(SHEET);
+        //System.out.println("BEGIN");
+        String s = yytext().trim();
+        s = s.substring(7, s.length()-18);
+        System.out.println("SQUARE "+s);
+        return symbol(LabParserSym.VIDEO_OP, s);
+    }
 }
 
 <SHEET> {
     "{" {
-        //System.out.println("LCURLY");
+        // System.out.println("LCURLY");
         return symbol(LabParserSym.LCURLY);
     }
     "}" {WhiteSpace}* {
-        //System.out.println("RCURLY");
+        // System.out.println("RCURLY");
         return symbol(LabParserSym.RCURLY);
     }
     [a-zA-Z0-9] {
@@ -115,13 +136,23 @@ HorizontalTwo = {WhiteSpace}* "\\horizontaltwo"
     {LabletCheck} {
         return symbol(LabParserSym.LABLETCHECK);
     }
+    {LabletVideo} {
+        // System.out.println("VIDEO found");
+        return symbol(LabParserSym.LABLETVIDEO);
+    }
     {HorizontalTwo} {
         return symbol(LabParserSym.HORIZONTALTWO);
     }
+    {HorizontalThree} {
+        return symbol(LabParserSym.HORIZONTALTHREE);
+    }
     {EndSheet} {
         yybegin(TITLED);
-       // System.out.println("END");
+        // System.out.println("END");
         return symbol(LabParserSym.END);
+    }
+    {SquareString} {
+        return symbol(LabParserSym.SQUARESTRING, yytext());
     }
     [^] {
         System.out.println("Found an unknown thing: "+yytext());
@@ -132,7 +163,7 @@ HorizontalTwo = {WhiteSpace}* "\\horizontaltwo"
     [\}] {
         yybegin(SHEET);
         yypushback(1);
-        //System.out.println("STRING "+string.toString());
+        // System.out.println("STRING "+string.toString());
         return symbol(LabParserSym.STRING, string.toString());
     }
     {WhiteSpace}+ {
