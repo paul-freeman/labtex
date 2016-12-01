@@ -18,6 +18,7 @@ import java_cup.runtime.*;
 
 %{
 	StringBuffer string = new StringBuffer();
+	int prior_state = 0;
 
 	private Symbol symbol(int type) {
 		return new Symbol(type, yyline, yycolumn);
@@ -30,157 +31,117 @@ import java_cup.runtime.*;
 LineTerminator = \r|\n|\r\n
 WhiteSpace = {LineTerminator} | [ \t\f]
 Comment = "%" [^\r\n]* ~{LineTerminator}
-Line = [^\r\n]* ~{LineTerminator}
+
+ValidLaTeX = [^&%$#_{}~\^\\\r\n\t\f \"]
 
 SquareString = "\[" [^\]]* "\]"
-CurlyString  = "\{" [^\}]* "\}"
 
-BeforeTitle     = {WhiteSpace}* "\\title"
-BeforeNormal    = {WhiteSpace}* "\\begin" {SquareString}? "\{labletsheet\}"
-BeforeVideo     = {WhiteSpace}* "\\begin\{labletvideopage\}"
-BeforeVideoOp   = {WhiteSpace}* "\\begin" {SquareString} "\{labletvideopage\}"
-EndSheet        = {WhiteSpace}* "\\end\{labletsheet\}"
-LabletText      = {WhiteSpace}* "\\lablettext" {SquareString}?
-LabletHeader    = {WhiteSpace}* "\\labletheader" {SquareString}?
-LabletCheck     = {WhiteSpace}* "\\labletcheck" {SquareString}?
-LabletVideo     = {WhiteSpace}* "\\labletvideo" {SquareString}?
-HorizontalTwo   = {WhiteSpace}* "\\horizontaltwo"
-HorizontalThree = {WhiteSpace}* "\\horizontalthree"
+LabletSheet     = "\{labletsheet\}"
+LabletVideoPage = "\{labletvideopage\}"
+MotionPage      = "\\labletmotionpage"
+CalcYSpeed      = "\\labletcalcyspeed"
+AnySheet        = {LabletSheet} | {LabletVideoPage}
+BeginAnySheet   = ( "\\begin" {SquareString}? {AnySheet} ) | {MotionPage} | {CalcYSpeed}
+EndAnySheet     = "\\end" {AnySheet}
 
-BeforeSheet   = {BeforeNormal} | {BeforeVideo}
+Key   = {WhiteSpace}* [a-zA-Z_] [a-zA-Z_0-9]* {WhiteSpace}* [=]
+Value = {WhiteSpace}* [a-zA-Z_] [a-zA-Z_0-9]* {WhiteSpace}* [,]?
 
 %state TITLE
 %state TITLED
 %state SHEET
-%state YYINITIAL2
-%state STRING
+%state LATEXSTRING
+%state OPTIONS
 
 %%
 
-/* keywords */
+{Comment}           { /* always ignore */ }
+
 <YYINITIAL> {
-    /* [^] { System.out.println("ERROR - Found: "+yytext()); } */
-    {Line} { /* System.out.println("LINE: "+yytext()); */ }
-    {BeforeTitle} {
-        //System.out.println("TITLE");
-        yybegin(TITLE);
-        return symbol(LabParserSym.TITLE);
-    }
-    {BeforeSheet} {
-        yybegin(SHEET);
-        //System.out.println("BEGIN");
-        return symbol(LabParserSym.BEGIN);
-    }
-    {BeforeVideoOp} {
-        yybegin(SHEET);
-        //System.out.println("BEGIN");
-        String s = yytext().substring(7, yytext().length()-18);
-        System.out.println("SQUARE "+s);
-        return symbol(LabParserSym.VIDEO_OP, s);
-    }
+    /* scan to find the title */
+    "\\title"       { yypushback(yylength()); yybegin(TITLE); }
+    {BeginAnySheet} { throw new Error("Missing title"); }
+    [^]             { /* ignore */ }
 }
 
 <TITLE> {
-    [\{] {
-        string.setLength(0);
-    }
-    [\}] {
-        yybegin(TITLED);
-    }
-    [^\{\}]+ {
-        System.out.print("Lablet = {\n    interface = 1.0,\n    title = ");
-        System.out.print("\"(TeX) "+yytext()+"\"\n}\n\n\n");
-    }
+    /* parse title */
+    "\\title"       { return symbol(LabParserSym.KW_TITLE); }
+    [\{]            { return symbol(LabParserSym.LCURLY); }
+    [\}]            { yybegin(TITLED);
+                      return symbol(LabParserSym.RCURLY); }
+    {SquareString}  { /* ignore */ }
+    [^]             { yybegin(LATEXSTRING);
+                      string.setLength(0);
+                      prior_state = TITLE;
+                      yypushback(1); }
 }
 
 <TITLED> {
-    {Line} { /* System.out.println("LINE: "+yytext()); */ }
-    {BeforeSheet} {
-        yybegin(SHEET);
-        //System.out.println("BEGIN");
-        return symbol(LabParserSym.BEGIN);
-    }
-    {BeforeVideoOp} {
-        yybegin(SHEET);
-        //System.out.println("BEGIN");
-        String s = yytext().trim();
+    /* scan to find a sheet */
+    {BeginAnySheet} { yypushback(yylength()); yybegin(SHEET); }
+    [^]             { /* ignore */ }
+
+    /*  String s = yytext().trim();
         s = s.substring(7, s.length()-18);
         System.out.println("SQUARE "+s);
         return symbol(LabParserSym.VIDEO_OP, s);
-    }
+    } */
 }
 
 <SHEET> {
-    "{" {
-        // System.out.println("LCURLY");
-        return symbol(LabParserSym.LCURLY);
-    }
-    "}" {WhiteSpace}* {
-        // System.out.println("RCURLY");
-        return symbol(LabParserSym.RCURLY);
-    }
-    [a-zA-Z0-9] {
-        string.setLength(0);
-        yybegin(STRING);
-        yypushback(1);
-    }
-    [^\{\}] {
-        //System.out.print(yytext());
-    }
-    {LabletText} {
-        return symbol(LabParserSym.LABLETTEXT);
-    }
-    {LabletHeader} {
-        return symbol(LabParserSym.LABLETHEADER);
-    }
-    {LabletCheck} {
-        return symbol(LabParserSym.LABLETCHECK);
-    }
-    {LabletVideo} {
-        // System.out.println("VIDEO found");
-        return symbol(LabParserSym.LABLETVIDEO);
-    }
-    {HorizontalTwo} {
-        return symbol(LabParserSym.HORIZONTALTWO);
-    }
-    {HorizontalThree} {
-        return symbol(LabParserSym.HORIZONTALTHREE);
-    }
-    {EndSheet} {
-        yybegin(TITLED);
-        // System.out.println("END");
-        return symbol(LabParserSym.END);
-    }
-    {SquareString} {
-        return symbol(LabParserSym.SQUARESTRING, yytext());
-    }
-    [^] {
-        System.out.println("Found an unknown thing: "+yytext());
-    }
+    /* parse sheet */
+    {EndAnySheet}       { yybegin(TITLED); }
+    "\\begin"           { return symbol(LabParserSym.KW_BEGIN); }
+    "\\end"             { return symbol(LabParserSym.KW_END); }
+    "labletsheet"       { return symbol(LabParserSym.KW_LABLETSHEET); }
+    "labletvideopage"   { return symbol(LabParserSym.KW_LABLETVIDEOPAGE); }
+    {MotionPage}        { return symbol(LabParserSym.KW_LABLETMOTIONPAGE); }
+    {CalcYSpeed}        { return symbol(LabParserSym.KW_LABLETCALCYSPEED); }
+    "\\lablettext"      { return symbol(LabParserSym.KW_LABLETTEXT); }
+    "\\labletheader"    { return symbol(LabParserSym.KW_LABLETHEADER); }
+    "\\labletcheck"     { return symbol(LabParserSym.KW_LABLETCHECK); }
+    "\\labletvideo"     { return symbol(LabParserSym.KW_LABLETVIDEO); }
+    "\\horizontal"      { return symbol(LabParserSym.KW_HORIZONTAL); }
+    "\\horizontaltwo"   { return symbol(LabParserSym.KW_HORIZONTALTWO); }
+    "\\horizontalthree" { return symbol(LabParserSym.KW_HORIZONTALTHREE); }
+    [\\]                { return symbol(LabParserSym.BACKSLASH); }
+    [\{]                { return symbol(LabParserSym.LCURLY); }
+    [\}]                { return symbol(LabParserSym.RCURLY); }
+    [\[]                { yybegin(OPTIONS);
+                          /* return symbol(LabParserSym.LEFTSQUARE); */ }
+    {WhiteSpace}+       { /* gobble */ }
+    [^]                 { yybegin(LATEXSTRING);
+                          string.setLength(0);
+                          prior_state = SHEET;
+                          yypushback(1); }
 }
 
-<STRING> {
-    [\}] {
-        yybegin(SHEET);
-        yypushback(1);
-        // System.out.println("STRING "+string.toString());
-        return symbol(LabParserSym.STRING, string.toString());
-    }
-    {WhiteSpace}+ {
-        // System.out.println("Found a whitespace thing: "+yytext());
-        string.append(' ');
-    }
-    [\"] { /* need to escape quotes in Lua strings */
-        string.append('\\');
-        string.append('\"');
-    }
-    [^\"\} \n\r\t\f] {
-        // System.out.println("Found a non-string thing: "+yytext());
-        string.append(yytext());
-    }
-    [^] {
-        System.out.println("Found an unknown thing: "+yytext());
-    }
+/*
+ * For now, we just look for valid characters
+ * eventually, we will want to support escape commands
+ */
+<LATEXSTRING> {
+    {WhiteSpace}+   { string.append(' '); }
+    [\"]            { string.append("\\\""); }
+    {ValidLaTeX}+   { string.append(yytext()); }
+    [^]             { yypushback(1);
+                      yybegin(prior_state);
+                      return symbol(LabParserSym.LATEXSTRING, string.toString()); }
+}
+
+/* not used yet */
+<OPTIONS> {
+    [\]]    { yybegin(SHEET); /* return symbol(LabParserSym.RIGHTSQUARE); */ }
+    {Key}   { /* return symbol(LabParserSym.LATEXSTRING, yytext().substring(0,yylength()-1)); */ }
+    {Value} { /*
+                if (yytext().endsWith(",") {
+                    return symbol(LabParserSym.LATEXSTRING, yytext().substring(0,yylength()-1));
+                } else {
+                    return symbol(LabParserSym.LATEXSTRING, yytext());
+                }
+            */ }
+    {WhiteSpace}+ { /* gobble */ }
 }
 
 <<EOF>> { return symbol(LabParserSym.EOF); }

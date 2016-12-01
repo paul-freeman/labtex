@@ -13,126 +13,133 @@ action code {:
     String prev = null;
 :}
 
-/* terminals */
-terminal         TITLE, BEGIN, END;
-terminal         LCURLY, RCURLY;
-terminal         LABLETTEXT, LABLETHEADER, LABLETCHECK, LABLETVIDEO;
-terminal         HORIZONTALTWO, HORIZONTALTHREE;
-terminal String  STRING, SQUARESTRING, VIDEO_OP;
+/* keywords */
+terminal    KW_TITLE,
+            KW_BEGIN,
+            KW_END,
+            KW_LABLETSHEET,
+            KW_LABLETVIDEOPAGE,
+            KW_LABLETMOTIONPAGE,
+            KW_LABLETCALCYSPEED,
+            KW_LABLETTEXT,
+            KW_LABLETHEADER,
+            KW_LABLETCHECK,
+            KW_LABLETVIDEO,
+            KW_HORIZONTAL,
+            KW_HORIZONTALTWO,
+            KW_HORIZONTALTHREE;
+
+/* symbold */
+terminal    LCURLY,
+            RCURLY,
+            BACKSLASH;
+terminal String  LATEXSTRING, SQUARESTRING;
 
 /* non-terminals */
-non terminal    lab, rest, sheets, elem, elems, named_elem, named_elems;
-non terminal    begin, sheet_title, horizontal, vertical;
+non terminal    lab, sheets, sheet, elem, elems, named_elem, named_elems;
+non terminal    normal_sheet, video_sheet, motion_sheet, calc_y_sheet;
+non terminal    horizontal, vertical;
+non terminal    title;
 
 /* grammar */
-lab ::=
-            TITLE rest
-		    |
-            rest
-            ;
-rest ::=
-            {: System.out.println("function Lablet.buildActivity(builder)"); :}
-            sheets
-            {: System.out.println("end"); :}
-            ;
-sheets ::=
-            sheets begin elems END
-		    |
-		    begin elems END
-		    ;
-begin ::=
-            BEGIN
-            {:
-                ++sheetnumber;
-                System.out.println();
-                System.out.println("\t-- SHEET "+sheetnumber);
-                System.out.println("\tlocal sheet = builder:create(\"Sheet\")");
-                System.out.println("\tbuilder:add(sheet)");
-            :}
-            |
-            BEGIN LCURLY STRING:s
-            {:
-                ++sheetnumber;
-                System.out.println();
-                System.out.println("\t-- SHEET "+sheetnumber);
-                System.out.println("\tlocal sheet = builder:create(\"Sheet\")");
-                System.out.println("\tbuilder:add(sheet)");
-                System.out.println("\tsheet:setTitle(\""+s+"\")\n");
-            :}
-            RCURLY
-            |
-            VIDEO_OP:s
-            {:
-                ++sheetnumber;
-                System.out.println();
-                System.out.println("\t-- SHEET "+sheetnumber);
-                System.out.println("\tlocal sheet = builder:create(\"Sheet\")");
-                System.out.println("\tbuilder:add(sheet)");
-                String key = new String("sheet_orientation");
-                int x = s.indexOf(key);
-                if (x != -1) {
-                    s = s.substring(x);
-                    x = s.indexOf(",");
-                    if (x != -1) {
-                        s = s.substring(0,x);
-                    }
-                    if (s.indexOf("horizontal") != -1) {
-                        System.out.println("\tsheet:setMainLayoutOrientation(\"horizontal\")");
-                    }
-                }
-            :}
-            |
-            VIDEO_OP:s LCURLY STRING:t
-            {:
-                ++sheetnumber;
-                System.out.println();
-                System.out.println("\t-- SHEET "+sheetnumber);
-                System.out.println("\tlocal sheet = builder:create(\"Sheet\")");
-                System.out.println("\tbuilder:add(sheet)");
-                System.out.println("\tsheet:setTitle(\""+t+"\")\n");
-                String key = new String("sheet_orientation");
-                int x = s.indexOf(key);
-                if (x != -1) {
-                    s = s.substring(x);
-                    x = s.indexOf(",");
-                    if (x != -1) {
-                        s = s.substring(0,x);
-                    }
-                    if (s.indexOf("horizontal") != -1) {
-                        System.out.println("\tsheet:setMainLayoutOrientation(\"horizontal\")");
-                    }
-                }
-            :}
+
+// a lab is a title with a number of sheets
+lab ::= title sheets {: System.out.println("end"); :};
+
+// titles are always in one format
+title ::=   KW_TITLE LCURLY LATEXSTRING:ls
+            {:  System.out.print("Lablet = {\n\tinterface = 1.0,\n\ttitle = ");
+                System.out.print("\"(TeX) " + ls + "\"\n}\n\n\n");
+                System.out.println("function Lablet.buildActivity(builder)"); :}
             RCURLY
             ;
-elems ::=
-            elem elems
-            | elem ;
+
+// one or more sheets
+sheets ::= sheet sheets | sheet ;
+
+// three kinds of sheets
+sheet ::= normal_sheet | video_sheet | motion_sheet | calc_y_sheet;
+
+normal_sheet ::=    KW_BEGIN LCURLY KW_LABLETSHEET RCURLY LCURLY LATEXSTRING:ls RCURLY
+                    {:  ++sheetnumber;
+                        System.out.println();
+                        System.out.println("\t-- SHEET "+sheetnumber);
+                        System.out.println("\tlocal sheet = builder:create(\"Sheet\")");
+                        System.out.println("\tbuilder:add(sheet)");
+                        System.out.println("\tsheet:setTitle(\"" + ls + "\")"); :}
+                    elems ;
+
+video_sheet ::=     KW_BEGIN LCURLY KW_LABLETVIDEOPAGE RCURLY LCURLY LATEXSTRING:ls RCURLY
+                    {:  ++sheetnumber;
+                        System.out.println();
+                        System.out.println("\t-- SHEET "+sheetnumber);
+                        System.out.println("\tlocal sheet = builder:create(\"Sheet\")");
+                        System.out.println("\tbuilder:add(sheet)");
+                        System.out.println("\tsheet:setTitle(\"" + ls + "\")"); :}
+                    elems
+                    |
+                    KW_BEGIN LCURLY KW_LABLETVIDEOPAGE RCURLY LCURLY LATEXSTRING:ls RCURLY KW_HORIZONTAL
+                    {:  ++sheetnumber;
+                        System.out.println();
+                        System.out.println("\t-- SHEET "+sheetnumber);
+                        System.out.println("\tlocal sheet = builder:create(\"Sheet\")");
+                        System.out.println("\tbuilder:add(sheet)");
+                        System.out.println("\tsheet:setMainLayoutOrientation(\"horizontal\")");
+                        System.out.println("\tsheet:setTitle(\"" + ls + "\")"); :}
+                    elems ;
+
+motion_sheet ::=    KW_LABLETMOTIONPAGE LCURLY LATEXSTRING:l1 RCURLY
+                                        LCURLY LATEXSTRING:l2 RCURLY
+                                        LCURLY LATEXSTRING:l3 RCURLY
+                    {:  ++sheetnumber;
+                        System.out.println();
+                        System.out.println("\t-- SHEET "+sheetnumber);
+                        System.out.println("\tlocal sheet = builder:create(\"MotionAnalysis\")");
+                        System.out.println("\tbuilder:add(sheet)");
+                        System.out.println("\tsheet:setTitle(\"" + l1 + "\")");
+                        System.out.println("\tsheet:setExperiment(" + l2 + ")");
+                        System.out.println("\tsheet:setDescriptionText(\"" + l3 + "\")"); :}
+                    ;
+
+calc_y_sheet ::=    KW_LABLETCALCYSPEED LCURLY LATEXSTRING:l1 RCURLY
+                                        LCURLY LATEXSTRING:l2 RCURLY
+                                        LCURLY LATEXSTRING:l3 RCURLY
+                    {:  ++sheetnumber;
+                        System.out.println();
+                        System.out.println("\t-- SHEET "+sheetnumber);
+                        System.out.println("\tlocal sheet = builder:create(\"CalculateYSpeed\")");
+                        System.out.println("\tbuilder:add(sheet)");
+                        System.out.println("\tsheet:setExperiment(" + l2 + ")");
+                        System.out.println("\tsheet:setTitle(\"" + l1 + "\")");
+                        System.out.println("\tsheet:setHeader(\"" + l3 + "\")"); :}
+                    ;
+
+elems ::= elem elems | elem ;
 elem ::=
-            LABLETTEXT LCURLY STRING:s
+            KW_LABLETTEXT LCURLY LATEXSTRING:s
             {:
                 System.out.println("\tsheet:addText(\""+s+"\")");
             :}
             RCURLY
             |
-            LABLETHEADER LCURLY STRING:s
+            KW_LABLETHEADER LCURLY LATEXSTRING:s
             {:
                 System.out.println("\tsheet:addHeader(\""+s+"\")");
             :}
             RCURLY
             |
-            LABLETCHECK LCURLY STRING:s
+            KW_LABLETCHECK LCURLY LATEXSTRING:s
             {:
                 System.out.println("\tsheet:addCheckQuestion(\""+s+"\")");
             :}
             RCURLY
             |
-            LABLETVIDEO LCURLY STRING:s1 RCURLY LCURLY STRING:s2
+            KW_LABLETVIDEO LCURLY LATEXSTRING:s1 RCURLY LCURLY LATEXSTRING:s2
             {:
                 ++videonumber;
                 System.out.println("\tlocal cameraExperiment"+videonumber+" = sheet:addCameraExperiment()");
                 System.out.println("\tcameraExperiment"+videonumber+":setDescriptionText(\""+s2+"\")");
-                System.out.println("\t"+s1+" = cameraExperiment"+videonumber+":getExperiment()");
+                System.out.println("\tlocal "+s1+" = cameraExperiment"+videonumber+":getExperiment()");
             :}
             RCURLY
             |
@@ -142,19 +149,19 @@ named_elems ::=
             named_elem named_elems
             | named_elem ;
 named_elem ::=
-            LABLETTEXT LCURLY STRING:s
+            KW_LABLETTEXT LCURLY LATEXSTRING:s
             {:
                 System.out.println("\tsheet:addText(\""+s+"\", "+element+")");
             :}
             RCURLY
             |
-            LABLETHEADER LCURLY STRING:s
+            KW_LABLETHEADER LCURLY LATEXSTRING:s
             {:
                 System.out.println("\tsheet:addHeader(\""+s+"\", "+element+")");
             :}
             RCURLY
             |
-            LABLETCHECK LCURLY STRING:s
+            KW_LABLETCHECK LCURLY LATEXSTRING:s
             {:
                 System.out.println("\tsheet:addCheckQuestion(\""+s+"\", "+element+")");
             :}
@@ -163,7 +170,7 @@ named_elem ::=
             horizontal
             ;
 horizontal ::=
-            HORIZONTALTWO
+            KW_HORIZONTALTWO
             {:
                 Integer h = ++horizontalnumber;
                 Integer n = sheetnumber;
@@ -174,7 +181,7 @@ horizontal ::=
             LCURLY vertical RCURLY
             LCURLY vertical RCURLY
             |
-            HORIZONTALTHREE
+            KW_HORIZONTALTHREE
             {:
                 Integer h = ++horizontalnumber;
                 Integer n = sheetnumber;

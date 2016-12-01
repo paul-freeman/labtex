@@ -8,39 +8,49 @@ package nz.ac.auckland.labtex.generated;
 /** CUP generated class containing symbol constants. */
 public class LabParserSym {
   /* terminals */
-  public static final int HORIZONTALTWO = 11;
-  public static final int SQUARESTRING = 14;
-  public static final int LABLETTEXT = 7;
-  public static final int STRING = 13;
+  public static final int KW_LABLETVIDEOPAGE = 6;
+  public static final int KW_HORIZONTALTWO = 14;
+  public static final int KW_END = 4;
+  public static final int KW_LABLETCALCYSPEED = 8;
+  public static final int KW_LABLETSHEET = 5;
+  public static final int SQUARESTRING = 20;
+  public static final int RCURLY = 17;
+  public static final int LCURLY = 16;
   public static final int EOF = 0;
-  public static final int TITLE = 2;
-  public static final int HORIZONTALTHREE = 12;
-  public static final int LABLETHEADER = 8;
+  public static final int KW_LABLETTEXT = 9;
+  public static final int BACKSLASH = 18;
+  public static final int KW_LABLETMOTIONPAGE = 7;
+  public static final int LATEXSTRING = 19;
+  public static final int KW_HORIZONTAL = 13;
   public static final int error = 1;
-  public static final int RCURLY = 6;
-  public static final int LABLETVIDEO = 10;
-  public static final int LABLETCHECK = 9;
-  public static final int END = 4;
-  public static final int BEGIN = 3;
-  public static final int LCURLY = 5;
-  public static final int VIDEO_OP = 15;
+  public static final int KW_LABLETVIDEO = 12;
+  public static final int KW_HORIZONTALTHREE = 15;
+  public static final int KW_LABLETCHECK = 11;
+  public static final int KW_LABLETHEADER = 10;
+  public static final int KW_BEGIN = 3;
+  public static final int KW_TITLE = 2;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
-  "TITLE",
-  "BEGIN",
-  "END",
+  "KW_TITLE",
+  "KW_BEGIN",
+  "KW_END",
+  "KW_LABLETSHEET",
+  "KW_LABLETVIDEOPAGE",
+  "KW_LABLETMOTIONPAGE",
+  "KW_LABLETCALCYSPEED",
+  "KW_LABLETTEXT",
+  "KW_LABLETHEADER",
+  "KW_LABLETCHECK",
+  "KW_LABLETVIDEO",
+  "KW_HORIZONTAL",
+  "KW_HORIZONTALTWO",
+  "KW_HORIZONTALTHREE",
   "LCURLY",
   "RCURLY",
-  "LABLETTEXT",
-  "LABLETHEADER",
-  "LABLETCHECK",
-  "LABLETVIDEO",
-  "HORIZONTALTWO",
-  "HORIZONTALTHREE",
-  "STRING",
-  "SQUARESTRING",
-  "VIDEO_OP"
+  "BACKSLASH",
+  "LATEXSTRING",
+  "SQUARESTRING"
   };
 }
 
