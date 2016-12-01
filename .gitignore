@@ -7,9 +7,9 @@
 *.snm
 *.toc
 
-*.java~
+*~
 *.class
 
 *.swp
 
-/.idea/
+.idea/*

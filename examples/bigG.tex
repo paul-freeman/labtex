@@ -1,534 +1,465 @@
-\documentclass{beamer}
- 
-\usepackage[utf8]{inputenc}
-\usepackage{lablet} 
- 
-\title{Experiment 313: Estimation of the Gravitational Constant}
-\author{Dr. Kasper van Wijk}
-\institute{University of Auckland}
-\date{2016}
- 
- 
- 
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{labs}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{import}
+\usepackage{natbib}
+\usepackage{enumitem}
+
+\def\expttitle{Estimation of the Gravitational Constant}
+\def\exptnumber{313}
+\markright{Experiment \exptnumber: \expttitle}
+
+\hypersetup{
+  colorlinks,%
+  citecolor=blue,%
+  filecolor=blue,%
+  linkcolor=blue,%
+  urlcolor=blue
+}
 \begin{document}
- 
-\frame{\titlepage}
- 
-\begin{frame}
-\frametitle{Aims}
-The main aim of the experiment is to estimate the gravitational constant G.
-Secondary aims are to study torques, torsion balances, and damped harmonic
-oscillations. The experiment also provides an exercise and discussion on
-systematic errors.
 
-Warning: Do not disturb the setup until you have read this handout. Mishandling
-of the apparatus can set it in motion, and if this happens you will need to
-wait hours for the motion to damp out.
-\end{frame}
- 
-\begin{frame}
-\frametitle{References}
-[1] Richard Phillips Feynman, Robert B Leighton, and Matthew Sands. The Feynman
-Lectures on Physics, Desktop Edition Volume I, volume 1. Basic Books, 2013.
+\maketitle
 
-[2] George T Gillies. The Newtonian gravitational constant: recent measurements
-and related studies.  Reports on Progress in Physics, 60(2):151, 1997.
+\section*{Aims}
 
-[3] Peter J Mohr and Barry N Taylor. Codata recommended values of the
-fundamental physical constants: 2002. Reviews of Modern Physics, 77(1):1, 2005.
+The main aim of the experiment is to estimate the gravitational
+constant $G$. Secondary aims are to study torques, torsion balances,
+and damped harmonic oscillations. The experiment also provides an
+exercise and discussion on systematic errors.
 
-[4] Stephan Schlamminger. Fundamental constants: A cool way to measure big G.
-Nature, 510(7506):478– 480, 2014.
+\textbf{Warning:} Do not disturb the setup until you have read this
+handout. Mishandling of the apparatus can set it in motion, and if
+this happens you will need to wait hours for the motion to damp out.
 
-[5] Roelof Karel Snieder and Kasper van Wijk. A guided tour of mathematical
-physics. Cambridge University Press, 3rd edition, 2015.
-\end{frame}
+\bibliographystyle{plain}
+\bibliography{refs}
 
-\begin{frame}
-\frametitle{Introduction}
-Of the fundamental forces, the one of which we are most-directly aware is that
-of gravity. The force between two spherical masses m and M whose
-centre-to-centre separation is r is given by Newton’s law of Universal
-Gravitation where G is the “gravitational constant,” and the direction of r̂ is
-defined in Figure 1. Because gravity is by far the weakest of the fundamental
-forces, our estimate of G is one of the universal constants with the lowest
-precision.
+\section*{Introduction}
+Of the fundamental forces, the one of which we are most-directly aware
+is that of gravity. The force between two spherical masses $m$ and $M$
+whose centre-to-centre separation is $r$ is given by Newton's law of
+Universal Gravitation:%
+\begin{equation}
+  {\bf F}=-G\frac{mM\hat{\bf r}}{r^{2}},%
+  \label{eq:G}
+\end{equation}
+where $G$ is the ``gravitational constant,'' and the direction of
+$\hat{\bf r}$ is defined in Figure~\ref{fig:mM}. Because gravity is by
+far the weakest of the fundamental forces, our estimate of $G$ is one
+of the universal constants with the lowest precision.
 
-Following in the footprints of Henry Cavendish, we are going to estimate this
-constant G. The experiment you are about to perform is not very different from
-the way Cavendish did his in 1798.1 Interestingly, our current “best” estimates
-of G are not that different from the Cavendish’ result, either!
+\begin{figure}[h]
+  \centering
+  \def\svgwidth{0.5\columnwidth}
+  \import{figs/}{NewtonlawG.pdf_tex}
+  \caption{Two masses, separated by a distance $r$, and the
+    direction of the unit vector $\hat{\bf r}$.}
+  \label{fig:mM}
+\end{figure}
 
-We will use a torsion balance, that is the modern-day equivalent of Cavendish’
-balance in 1798. It consists of a bar suspended by a very thin wire and
-carrying a small lead sphere of mass m at each end (Figure 2).  To twist the
-balance an angle θ from its position at rest, requires a torque where κ is the
-torque constant, defined by the rigidity and dimensions of the wire.
-\end{frame}
+Following in the footprints of
+\href{http://en.wikipedia.org/wiki/Henry_Cavendish}{Henry Cavendish},
+we are going to estimate this constant $G$.  The experiment you are
+about to perform is not very different from the way Cavendish did his
+in 1798.\footnote{Cavendish estimated the density of the Earth; his
+  measurements included all the ingredients to estimate $G$, but he
+  never did. Poynting did so, almost 100 years later, in 1894.}
+Interestingly, our current ``best'' estimates of $G$ are not that
+different from the Cavendish' result, either!
 
-\begin{frame}
-\frametitle{Torque on the balance with M in Position A}
-The presence of a lead sphere of mass M , as shown in Figure 2, exerts a force
-F on m as defined by equation 1.  With m rotating around an axis with a radius
-d, the force F results in a torque where × denoted the cross product, and the
-direction of the vector τ is according to the right-hand rule.
+We will use a torsion balance, that is the modern-day equivalent of
+Cavendish' balance in 1798. It consists of a bar suspended by a very
+thin wire and carrying a small lead sphere of mass $m$ at each end
+(Figure~\ref{fig:balance}). To twist the balance an angle $\theta$ from
+its position at rest, requires a torque $$\tau = \kappa \theta,$$
+where $\kappa$ is the torque constant, defined by the rigidity and
+dimensions of the wire.
 
-\begin{check}
-Use the right panel of Figure 2, to show that the torque on the torsion balance
-due to one mass M is
-\end{check}
+\section*{Torque on the balance with $M$ in Position A}
+\begin{figure}
+  \centering
+  \def\svgwidth{0.4\columnwidth}
+  \import{figs/}{balance.pdf_tex}\hspace{2cm}
+  \def\svgwidth{0.45\columnwidth}
+  \import{figs/}{torque1.pdf_tex}
+  \caption{Left: Torsion balance with masses $m$, and torque constant
+    $\kappa$, under the influence of two masses $M$. Right: Top view
+    of the balance.}
+  \label{fig:balance}
+\end{figure}
+The presence of a lead sphere of mass $M$,
+%are external to the enclosure and situated
+as shown in Figure~\ref{fig:balance}, exerts a force ${\bf F}$ on $m$
+as defined by equation~\ref{eq:G}.  With $m$ rotating around an axis
+with a radius $d$, the force ${\bf F}$ results in a torque
+\begin{equation}
+  \boldsymbol{\tau} = {\bf d} \times {\bf F},
+  \label{eq:tau}
+\end{equation}
+where $\times$ denoted the cross product, and the direction of the
+vector $\boldsymbol{\tau}$ is according to the right-hand rule.
 
-With the balance at rest in position A at an angle θ0 from the reference
-position, the gravitational attraction between the large and small spheres
-provides a torque that is exactly balanced by the restoring torque from the
-suspension wire where b0 is the distance between the spheres of mass m and M at
+\begin{enumerate}
+\item Use the right panel of Figure~\ref{fig:balance}, to show that
+  the torque on the torsion balance due to one mass $M$ is $\left(
+    \frac{GmM}{b_0^{2}}\cos\theta_{0}\right) d $.
+\end{enumerate}
+
+With the balance at rest in position A at an angle $\theta_0$ from
+the reference position, the gravitational attraction between the large
+and small spheres provides a torque that is exactly balanced by the
+restoring torque from the suspension wire:
+\begin{align}
+  2\left(  \frac{GmM}{b_0^{2}}\cos\theta_{0}\right)  d - \kappa\theta_{0}=0,
+  \label{eqn:basic}%
+\end{align}
+where $b_0$ is the distance between the spheres of mass $m$ and $M$ at
 rest.
 
-\begin{check}
-Show that for small angles θ0 , cos θ0 ≈ 1, and that
-\end{check}
+\begin{enumerate}[resume]
+\item Show that for small angles $\theta_{0}$, $\cos\theta_{0}\approx
+  1$, and that%
+\begin{align}
+  G = \frac{\theta_0b_0^2}{2mMd}\kappa
+  \label{eqn:basic}%
+\end{align}
+\end{enumerate}
+This means that if we can just estimate the torque constant $\kappa$,
+$G$ can be expressed in known terms. The way to get $\kappa$
+experimentally, is to oscillate the system in the next section.
 
-Experiment 313: Estimation of the Gravitational Constant
+\section*{Exciting damped harmonic oscillations: moving $M$ to Position B}
+When the large spheres are rotated to position B, the suspended system
+will be deflected from its initial angular position
+$\theta=\theta_{0}$ and eventually reach a new rest position at the
+same angle on the opposite side of the reference position. However, the
+torsion balance will oscillate before equilibrium is restored. How
+many oscillations and their amplitude depend on the torque constant
+and friction in the wire and drag of the balance in the air, captured
+jointly in friction constant $\beta$.
 
-313-3
+The differential equation governing the oscillatory motion of the
+suspended system can be derived by applying Newton's second law of
+motion for a rotational system. The torque provided by the masses $M$
+is balanced by the rotational acceleration, a rotation velocity (with
+friction $\beta$) and the torque provided by the wire with constant
+$\kappa$:
+% $${\bf F} = m {\bf a} $$
+%where the angle $\theta$ as a function of time is
+%described by:
+%With reference to Fig. \ref{fig:three}(b), if 
+\begin{equation}
+  I\frac{\mathrm{d}^{2}\theta}{\mathrm{d}t^{2}}+ 
+  \beta\frac{\mathrm{d}\theta}{\mathrm{d}t} + \kappa\theta =
+  2\frac{GmM}{b^{2}}d,
+  \label{eqn:de}
+\end{equation}
+where the moment of inertia $I$ \cite[Chapter 18
+in][]{feynman2013feynman}. For the two discrete masses $m$, this is
+\begin{equation}
+  I =  \sum_i m_id_i^2 = 2md^2.
+  \label{eq:I}
+\end{equation}
 
-This means that if we can just estimate the torque constant κ, G can be expressed in known terms. The
-way to get κ experimentally, is to oscillate the system in the next section.
+For a bar of length $2d$ and $\rho$ as its mass per unit length, the
+moment of inertia is:
+  \begin{equation}
+    I =  \int_{-d}^{d} \rho x^2 dx.
+    \label{eq:Icont}
+\end{equation}
 
-Exciting damped harmonic oscillations: moving M to Position B
-When the large spheres are rotated to position B, the suspended system will be deflected from its initial
-angular position θ = θ0 and eventually reach a new rest position at the same angle on the opposite side
-of the reference position. However, the torsion balance will oscillate before equilibrium is restored. How
-many oscillations and their amplitude depend on the torque constant and friction in the wire and drag of
-the balance in the air, captured jointly in friction constant β.
-The differential equation governing the oscillatory motion of the suspended system can be derived by applying
-Newton’s second law of motion for a rotational system. The torque provided by the masses M is balanced
-by the rotational acceleration, a rotation velocity (with friction β) and the torque provided by the wire with
-constant κ:
-GmM
-dθ
-d2 θ
-+ κθ = 2 2 d,
-(5)
-I 2 +β
-dt
-dt
-b
-where the moment of inertia I [Chapter 18 in 1]. For the two discrete masses m, this is
-X
-I=
-mi d2i = 2md2 .
-(6)
-i
+\begin{enumerate}[resume]
+\item  Show that the total moment of inertia of rod and masses $m$ is
+  \begin{equation}
+    I=2md^{2}+\frac{1}{12}m_{\mathrm{bar}}l_{\mathrm{bar}}^{2}=2md^{2}+\frac
+    {1}{12}m_{\mathrm{bar}}\left(  2d\right)  ^{2}=2md^{2}\left(  1+\frac{1}%
+      {6}\frac{m_{\mathrm{bar}}}{m}\right).
+    \label{eqn:G6}%
+  \end{equation}
+\end{enumerate}
 
-For a bar of length 2d and ρ as its mass per unit length, the moment of inertia is:
-Z
+\subsection*{The time-dependent forcing term}
+Now we are almost ready to solve the inhomogeneous differential
+equation of second order, as presented by Equation~\ref{eqn:de}. The
+left-hand side is uniformly expressed in terms of $\theta(t)$, but the
+forcing term on the right-hand side is a function of mass separation
+$b$, and this separation is a function of time, as well.
 
-d
-
-I=
-
-ρx2 dx.
-
-(7)
-
-−d
-
-3. Show that the total moment of inertia of rod and masses m is
-I = 2md2 +
-
-
-
-1
-1
-1 mbar
-2
-2
-mbar lbar
-= 2md2 + mbar (2d) = 2md2 1 +
-.
-12
-12
-6 m
-
-(8)
-
-The time-dependent forcing term
-Now we are almost ready to solve the inhomogeneous differential equation of second order, as presented by
-Equation 5. The left-hand side is uniformly expressed in terms of θ(t), but the forcing term on the right-hand
-side is a function of mass separation b, and this separation is a function of time, as well.
-4. Use Figure 2 to show that b(t) can be expressed as
-a − b(t) = d sin(θ(t)).
-5. And use the small-angle approximation and a first order Taylor series approximation [e.g., Section 3.1
-in 5] to show that
-
-
-1
-2d
-1
-≈ 2 1 + θ(t) .
-(9)
-b(t)2
-a
-a
-Equation (5) then becomes:
-I
-
-d2 θ
-dθ
-GmM d
-+β
-+ Kθ = 2
-,
-dt2
-dt
-a2
-
+\begin{enumerate}[resume]
+\item Use Figure~\ref{fig:balance} to show that $b(t)$ can be expressed
+  as
+  \[
+  a-b(t)=d\sin(\theta(t)).
+  \]
+\item And use the small-angle approximation and a first order Taylor
+  series approximation \cite[e.g., Section 3.1 in][]{SniederVanWijk15}
+  to show that
+  \begin{equation}
+    \frac{1}{b(t)^{2}}\approx\frac{1}{a^{2}}\left(1+\frac{2d}{a}\theta(t)\right).
+    \label{eqn:masssep}%
+  \end{equation}
+\end{enumerate}
+Equation~(\ref{eqn:de}) then becomes:%
+\begin{equation}
+  I\frac{\mathrm{d}^{2}\theta}{\mathrm{d}t^{2}}+\beta\frac{\mathrm{d}\theta
+  }{\mathrm{d}t}+K\theta=2\frac{GmMd}{a^{2}},
+  \label{eqn:2de}
+\end{equation}
 where
-K =κ−
+\begin{equation}
+  K=\kappa-\frac{4GmMd^{2}}{a^{3}}=
+  \frac{2GmMd}{b_0^{2}\theta_{0}}-\frac{4GmMd^{2}}{a^{3}}.
+  \label{eqn:Kdef}
+\end{equation}
+\begin{enumerate}[resume]
+\item Rearrange equation~(\ref{eqn:Kdef}), so that%
+  \begin{equation}
+    G=\frac{b_0^{2}\theta_{0}}{2mMd}
+    \left(\frac{a^{3}}{a^{3}-2b_0^{2}d\theta_{0}}\right)  K.
+    \label{eqn:G1}%
+  \end{equation}
+\end{enumerate}
+All terms except $K$ on the right-hand side are constants that we can
+measure in the lab, and $K$ can be estimated indirectly by experiment
+as equation~(\ref{eqn:2de}) is a standard second order differential
+equation which has a solution of the form:%
+\begin{equation}
+  \theta=A\exp\left(  -\frac{\beta t}{2I}\right)  \cos\left(  \omega
+    t+\phi\right)  +\frac{2GMmd}{Ka^{2}},
+  \label{eqn:2desol}%
+\end{equation}
+where $A$ and $\phi$ are constants and the angular frequency is
+\begin{equation}
+  \omega=\sqrt{\frac{K}{I}-\frac{\beta^{2}}{4I^{2}}},%
+\end{equation}
+or%
+\begin{equation}
+  K=I\left(\omega^2+\frac{\beta^{2}}{4I^{2}}\right).
+  \label{eqn:G2}%
+\end{equation}
 
-4GmM d2
-2GmM d 4GmM d2
-=
-−
-.
-a3
-b20 θ0
-a3
+\begin{enumerate}[resume]
+\item Show that expression~\ref{eqn:2desol} is a solution to the
+  differential equation~\ref{eqn:2de}.
+\end{enumerate}
 
-(10)
-
-(11)
-
-Experiment 313: Estimation of the Gravitational Constant
-
-313-4
-
-a0
-
-T
-a2
-
-s
-−s0
-
-0
-
-scale
-
-s0
-
-s0
-a3
-
-light source
-a1
-L
-
-Time (s)
-
-4θ0
-Position A
-θ0
-
-θ0
-
-reference position
-
-−s0
-
-reference position
-Pos. A
-
-Position B
-
-Position B
-
-Figure 3: Left: Positions (±s0 ) of the light beam at a distance L from the torsion balance. The light source
-is reflected from the mirror on the torsion balance under influence of the large masses M in Positions A and
-B. Right: Oscillations induced by moving the large masses M from Position A to Position B.
-6. Rearrange equation (11), so that
-G=
-
-b20 θ0
-2mM d
-
-
-
-a3
-3
-a − 2b20 dθ0
-
-
-K.
-
-(12)
-
-All terms except K on the right-hand side are constants that we can measure in the lab, and K can be
-estimated indirectly by experiment as equation (10) is a standard second order differential equation which
-has a solution of the form:
-
-
-βt
-2GM md
-θ = A exp −
-cos (ωt + φ) +
-,
-(13)
-2I
-Ka2
-where A and φ are constants and the angular frequency is
-r
-β2
-K
-− 2,
-ω=
-I
-4I
-or
-
-β2
-K=I ω + 2
-4I
-
-
-2
-
-(14)
-
-
-.
-
-(15)
-
-7. Show that expression 13 is a solution to the differential equation 10.
-
-The exponential decay of the oscillations
-The oscillatory motion of the suspended system is studied by observing the source light reflected by the
-torsion balance onto the scale at distance L from the balance. The light spot moves from s = −s0 and
-oscillates about s = +s0 (Left panel of Figure 3). If L is large (about 2.5 m in the laboratory set-up), s may
-be treated as the arc subtended by the angle of deflection of the light beam which is twice the deflection of
-the suspended system (i.e. 2θ):
-8. Use Figure 3 to write:
-θ0 =
+\subsection*{The exponential decay of the oscillations}
+\begin{figure}
+  \centering
+  \def\svgwidth{0.4\columnwidth}
+  \import{figs/}{lightsource.pdf_tex}\hspace{2cm}
+  \def\svgwidth{0.45\columnwidth}
+  \import{figs/}{oscillations.pdf_tex}
+  \caption{Left: Positions ($\pm s_0$) of the light beam at a
+    distance $L$ from the torsion balance. The light source is
+    reflected from the mirror on the torsion balance under influence
+    of the large masses $M$ in Positions A and B. Right: Oscillations
+    induced by moving the large masses $M$ from Position A to Position
+    B.}
+  \label{fig:light}
+\end{figure}
+The oscillatory motion of the suspended system is studied by observing
+the source light reflected by the torsion balance onto the scale at
+distance $L$ from the balance. The light spot moves from
+$s=-s_{0}$ and oscillates about $s=+s_{0}$ (Left panel of
+Figure~\ref{fig:light}).  If $L$ is large (about $2.5\mathrm{\,m}$ in
+the laboratory set-up), $s$ may be treated as the arc subtended by the
+angle of deflection of the light beam which is twice the deflection of
+the suspended system (i.e. $2\theta$):
+\begin{enumerate}[resume]
+\item Use Figure~\ref{fig:light} to write:%
+  \begin{equation}
+    \theta_{0}=\frac{2s_{0}}{4L}=\frac{s_{0}}{2L},
+    \label{eqn:G4}%
+  \end{equation}
+\end{enumerate}
 so that
-G=
+\begin{equation}
+  G=\frac{b_0^{2}s_0}{4mMdL}
+  \left(\frac{a^{3}}{a^{3}-b_0^{2}ds_0/L}\right)
+  \left(\omega^2+\frac{\beta^{2}}{4I^{2}}\right)I.
+  \label{eqn:G5}%
+\end{equation}
 
-b20 s0
-4mM dL
+Thus $s$ is proportional to $\theta$ and a plot of $s$ against $t$
+(see the right panel of Figure~\ref{fig:light}), may be used to
+measure the quantities necessary for the determination of the
+gravitational constant $G$. From the plot of $s$ against $t$, we can
+determine $\theta_{0}$ and $\beta/I$, the former by measuring the
+initial and final position of the light spot ($-s_{0}$ and $s_{0}$),
+the latter by fitting the period and decay of the oscillations.
 
-
 
-s0
-2s0
-=
-,
-4L
-2L
+\begin{enumerate}[resume]
+\item Insert equation~(\ref{eqn:G6}), to get the following equation for
+  the gravitational constant expressed in terms of measurable
+  quantities:%
+  \begin{equation}
+    G=\frac{\omega^{2}b_0^{2}ds_{0}}{2ML}\left[ 
+      \frac{a^{3}}{a^{3}-b_0^{2}ds_{0}/L}\right]  
+  \left[1+\left(\alpha/\omega\right)^2\right]  
+  \left[  1+\frac{1}{6}\frac{m_{\mathrm{bar}}}{m}\right],
+  \label{eqn:finalG}%
+\end{equation}
+where the damping parameter $\alpha =\beta/(2I)$.
+\end{enumerate}
+Equation~(\ref{eqn:finalG}) has also been arranged so that the
+principal and secondary effects of the oscillatory motion of the
+suspended system are clear. All the factors in the square brackets
+represent secondary effects and contribute less than 10\% to the value
+of $G$. From left to right, they account for (a) the varying
+gravitational torque, (b) effects of damping, and (c) consideration of
+the bar in the moment of inertia of the suspended system. However, the
+first term is not of the same form as the others, yet: 
+\begin{enumerate}[resume]
+\item Use a first-order Taylor expansion \cite[e.g., Section 3.1
+  in][]{SniederVanWijk15} to show that $\left[
+    \frac{a^{3}}{a^{3}-b_0^{2}ds_{0}/L}\right] \approx
+  [1+b_0^{2}ds_{0}/(a^3L)]$, so that
+  \begin{equation}
+    G=\frac{\omega^{2}b_0^{2}ds_{0}}{2ML}\left[ 1+\frac{b_0^{2}ds_{0}}{a^3L}\right]  
+    \left[1+\left(\alpha/\omega\right)^2\right]
+    \left[  1+\frac{1}{6}\frac{m_{\mathrm{bar}}}{m}\right].
+    \label{eqn:finalG2}%
+  \end{equation}
+\end{enumerate}
 
-a3
-3
-a − b20 ds0 /L
+\section*{Correction for the effect of the ``distant'' sphere}
+\begin{figure}
+  \centering
+  \def\svgwidth{0.5\columnwidth}
+  \import{figs/}{distantsphere.pdf_tex}
+  \caption{Forces $F$ and $F'$ on mass $m$ due to both large spheres.}
+  \label{fig:five}
+\end{figure}
+In the theory given above, the gravitational force exerted by the more
+distant of the two large spheres has not been taken into account. This
+additional force $F'$ has a component $f$ exactly opposite to the
+force $F$ due to the closer sphere (Figure~\ref{fig:five}).
+Based on the geometry of Figure~\ref{fig:five}, we can express $f$ in
+terms of $F$ as follows:%
+\[
+f=F'\cos\psi=\frac{GmM}{c^{2}}\left(  \frac{b_0+2d\sin\theta_{0}}%
+  {c}\right)  %=\gamma F
+\]
+\begin{enumerate}[resume]
+\item Show that $f = \gamma F$,  with $F=GmM/b_0^{2}$ and%
+  \begin{equation}
+    \gamma\approx\frac{b_0^{3}+2b_0^{2}d\theta_{0}}{\left(  b_0^{2}+4d^{2}+4b_0d\theta
+        _{0}\right)  ^{3/2}}=\frac{b_0^{3}+b_0^{2}ds_{0}/L}{\left(  b_0^{2}+4d^{2}%
+        +2b_0ds_{0}/L\right)  ^{3/2}}. 
+    \label{eqn:gamma}%
+  \end{equation}
+\end{enumerate}
 
-
-
-β2
-ω 2 + 2 I.
-4I
+To take into account the force $f$, we should multiply
+equation~(\ref{eqn:basic}) by $\left[ 1-\gamma\right]$. As a result,
+equation~(\ref{eqn:finalG}) for the gravitational constant should be
+divided by $\left[1-\gamma\right]$.
 
-(16)
+\begin{enumerate}[resume]
+\item Use a first-order Taylor expansion to show that $\left[
+    \frac{1}{1-\gamma}\right] \approx [1+\gamma]$, and that our
+  estimate of the gravitational constant is now
+\begin{equation}
+  G=\frac{\omega^{2}b_0^{2}ds_{0}}{2ML}
+  \left[ 1+\frac{b_0^{2}ds_{0}}{a^3L}\right]  
+  \left[1+\left(\alpha/\omega\right)
+    ^{2}\right]  
+  \left[  1+\frac{1}{6}\frac{m_{\mathrm{bar}}}{m}\right][1+\gamma].
+  \label{eqn:finalG3}%
+\end{equation}
+\end{enumerate}
 
-(17)
+Correcting this systematic error, should improve your estimate of $G$,
+but even recent estimates of $G$ must still suffer from systematic
+errors, as their quoted estimates plus uncertainties do not overlap
+\cite{gillies1997newtonian,mohr2005codata,schlamminger2014fundamental}.
 
-Experiment 313: Estimation of the Gravitational Constant
+\section*{Experiment}
 
-313-5
+%\subsection*{Procedure}%
 
-M
-F = GM m/b2
-m
-
-F 0 = GM m/c2
-ψ
-reference position
-f = F cos(ψ)
-c
-
-Figure 4: Forces F and F 0 on mass m due to both large spheres.
-Thus s is proportional to θ and a plot of s against t (see the right panel of Figure 3), may be used to measure
-the quantities necessary for the determination of the gravitational constant G. From the plot of s against t,
-we can determine θ0 and β/I, the former by measuring the initial and final position of the light spot (−s0
-and s0 ), the latter by fitting the period and decay of the oscillations.
-9. Insert equation (8), to get the following equation for the gravitational constant expressed in terms of
-measurable quantities:
-
-h
-
-i
-ω 2 b20 ds0
-a3
-1 mbar
-2
-1 + (α/ω)
-1+
-,
-(18)
-G=
-2M L
-a3 − b20 ds0 /L
-6 m
-where the damping parameter α = β/(2I).
-Equation (18) has also been arranged so that the principal and secondary effects of the oscillatory motion
-of the suspended system are clear. All the factors in the square brackets represent secondary effects and
-contribute less than 10% to the value of G. From left to right, they account for (a) the varying gravitational
-torque, (b) effects of damping, and (c) consideration of the bar in the moment of inertia of the suspended
-system. However, the first term is not of the same form as the others, yet:
-h
-i
-3
-10. Use a first-order Taylor expansion [e.g., Section 3.1 in 5] to show that a3 −ba2 ds0 /L ≈ [1+b20 ds0 /(a3 L)],
-0
-so that
-
-h
-
-
-i
-2 2
-2
-ω b0 ds0
-b ds0
-1 mbar
-2
-G=
-1 + 03
-1 + (α/ω)
-1+
-.
-(19)
-2M L
-a L
-6 m
-
-Correction for the effect of the “distant” sphere
-In the theory given above, the gravitational force exerted by the more distant of the two large spheres has
-not been taken into account. This additional force F 0 has a component f exactly opposite to the force F
-due to the closer sphere (Figure 4). Based on the geometry of Figure 4, we can express f in terms of F as
-follows:
-
-
-GmM b0 + 2d sin θ0
-f = F 0 cos ψ =
-c2
-c
-
-Experiment 313: Estimation of the Gravitational Constant
-
-313-6
-
-11. Show that f = γF , with F = GmM/b20 and
-γ≈
-
-b30 + 2b20 dθ0
-3/2
-
-(b20 + 4d2 + 4b0 dθ0 )
-
-=
-
-b30 + b20 ds0 /L
-3/2
-
-(b20 + 4d2 + 2b0 ds0 /L)
-
-.
-
-(20)
-
-To take into account the force f , we should multiply equation (4) by [1 − γ]. As a result, equation (18) for
-the gravitational constant should be divided by [1 − γ].
-i
-h
-1
-≈ [1 + γ], and that our estimate of the gravita12. Use a first-order Taylor expansion to show that 1−γ
-tional constant is now
-
-
-
-i
-ω 2 b20 ds0
-b2 ds0 h
-1 mbar
-2
-G=
-1 + 03
-1 + (α/ω)
-1+
-[1 + γ].
-(21)
-2M L
-a L
-6 m
-Correcting this systematic error, should improve your estimate of G, but even recent estimates of G must
-still suffer from systematic errors, as their quoted estimates plus uncertainties do not overlap [2, 3, 4].
-
-Experiment
 After you have answered all the previous questions:
-13. Measure L, the distance from the mirror to the screen. From the measurements given for the apparatus,
-determine a and b:
+\begin{enumerate}[resume]
+\item  Measure $L$, the distance from the mirror to the screen. From the
+measurements given for the apparatus, determine $a$ and $b$:
 
-Data for the apparatus
-distance a from the centre of the large mass M to the centre line of the small masses
-Mass of large spheres (M )
-Centre-to-centre distance between small spheres (2d)
-Thickness of glass enclosure (between outer faces of glass plates)
-Ratio of mass of bar to mass of small sphere (mbar /m)
+\[%
+\begin{tabular}
+[c]{lcc}%
+\multicolumn{3}{c}{\textbf{Data for the apparatus}}\\
+distance $a$ from the centre of the large mass M to the centre line of the small masses & $4.22 \pm 0.05$ & cm\\
+Mass of large spheres ($M$) & $1.500\pm0.005$ & kg\\
+Centre-to-centre distance between small spheres $\left(  2d\right)  $ &
+$10.00\pm0.05$ & cm\\
+Thickness of glass enclosure (between outer faces of glass plates) &
+$2.94\pm0.02$ & cm\\
+Ratio of mass of bar to mass of small sphere $\left(  m_{\mathrm{bar}%
+  }/m\right)  $ & $0.06\pm0.01$ &
+\end{tabular}
+\]
+Record ~5 minutes before moving M with lights on to later set the scale.
 
-4.22 ± 0.05
-1.500 ± 0.005
-10.00 ± 0.05
-2.94 ± 0.02
-0.06 ± 0.01
+\item Turn on the light source for the experiment to reflect on the scale 
+\item Measure distance from wall to scale
+\item Set up the tablet with the tripod so that the light on the scale is in one end of the frame, and you have ~20 cm to the other side.
+\item On the tablet, select the lablet application, then camera, video, and set frame rate to 0.2 fps
+\item Start recording
+\item After 5 minutes, flip the masses, turn off the lights and record for two more hours.
+\item Stop recording (square button), select "done", and "save." This will result in a filename for your movie with the date in it.
+\item Post-recording Analysis:
+	a. Move scale bar, set length
+	b. Set x/y coordinate system
+\item Pick frames, use "view" button to troubleshoot bad picks with graph.
+\item Connect tablet to a PC with USB, navigate to folder, select the csv file in your folder with the recording, and save this to the desktop PC
+%\item Estimate G from the recordings and the equations in the handout.
 
-Record 5 minutes before moving M with lights on to later set the scale.
-14. Turn on the light source for the experiment to reflect on the scale
-15. Measure distance from wall to scale
-16. Set up the tablet with the tripod so that the light on the scale is in one end of the frame, and you have
-20 cm to the other side.
-17. On the tablet, select the lablet application, then camera, video, and set frame rate to 0.2 fps
-18. Start recording
-19. After 5 minutes, flip the masses, turn off the lights and record for two more hours.
-20. Stop recording (square button), select ”done”, and ”save.” This will result in a filename for your movie
-with the date in it.
-21. Post-recording Analysis: a. Move scale bar, set length b. Set x/y coordinate system
-22. Pick frames, use ”view” button to troubleshoot bad picks with graph.
-23. Connect tablet to a PC with USB, navigate to folder, select the csv file in your folder with the recording,
-and save this to the desktop PC
-24. Fitting the data to equation (13), determine the initial and final steady-state levels of s: ±s0 , the
-angular frequency ω, and the damping parameter α = β/(2I).
+% \item With the large spheres in the Position A (each sphere just
+%   touching the side of the glass enclosure) and the system at rest
+%   after having been left undisturbed for a considerable time, read the
+%   position of the light spot. It is important that this reading be
+%   made before the large spheres are moved. As this reading will be
+%   used to determine $s_{0}$, several measurements should be taken over
+%   about 10~minutes so that an average value can be obtained.
 
-cm
-kg
-cm
-cm
+% \item Rotate the large spheres to Position B with the spheres
+%   just touching the sides of the glass enclosure. Take readings of the
+%   position of the light spot (e.g. every 15 seconds) and plot $s$
+%   as a function of time.
+  
+\item Fitting the data to equation~(\ref{eqn:2desol}), determine the
+  initial and final steady-state levels of $s$: $\pm s_{0}$, the
+  angular frequency $\omega$, and the damping parameter $\alpha =\beta/(2I)$.
 
-Experiment 313: Estimation of the Gravitational Constant
+\item Estimate $G$ from equation~(\ref{eqn:finalG2}).
 
-313-7
+\item Estimate $G$ from equation~(\ref{eqn:finalG3}), which corrects for
+  the attraction between $m$ and the distant $M$.
+  
+\item Carry out a systematic error analysis, including consideration
+  of the approximations made in the formulae for determining the
+  gravitational constant $G$.
+\end{enumerate}%
 
-25. Estimate G from equation (19).
-26. Estimate G from equation (21), which corrects for the attraction between m and the distant M .
-27. Carry out a systematic error analysis, including consideration of the approximations made in the
-formulae for determining the gravitational constant G.
+\subsection*{List of Equipment}%
 
-List of Equipment
-1. Gravitation torsion balance Leybold Model 332 10
-2. Light source Leybold Model 450 60
-3. 50-cm scale
-4. A stopwatch
-A. Chisholm and Z.C. Tan, June 1992
+%TCIMACRO{\TeXButton{EndEnumProcedure}{\endenumprocedure}}%
+%%BeginExpansion
+%\endenumprocedure
+%%EndExpansion
+
+\begin{enumerate}
+\item  Gravitation torsion balance Leybold Model 332 10
+\item  Light source Leybold Model 450 60
+\item 50-cm scale
+\item A stopwatch
+\end{enumerate}
+
+\noindent A. Chisholm and Z.C. Tan, June 1992\\
 Updated by Kasper van Wijk, 2014
-
-
 \end{document}
-
