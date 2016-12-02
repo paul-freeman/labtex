@@ -8,49 +8,41 @@ package nz.ac.auckland.labtex.generated;
 /** CUP generated class containing symbol constants. */
 public class LabParserSym {
   /* terminals */
-  public static final int KW_LABLETVIDEOPAGE = 6;
-  public static final int KW_HORIZONTALTWO = 14;
-  public static final int KW_END = 4;
-  public static final int KW_LABLETCALCYSPEED = 8;
-  public static final int KW_LABLETSHEET = 5;
-  public static final int SQUARESTRING = 20;
-  public static final int RCURLY = 17;
-  public static final int LCURLY = 16;
+  public static final int CARROT = 15;
+  public static final int BACKSLASH = 16;
+  public static final int LEFTCURLYBRACE = 12;
+  public static final int CMD_TEXT = 7;
+  public static final int KW_TITLE = 3;
   public static final int EOF = 0;
-  public static final int KW_LABLETTEXT = 9;
-  public static final int BACKSLASH = 18;
-  public static final int KW_LABLETMOTIONPAGE = 7;
-  public static final int LATEXSTRING = 19;
-  public static final int KW_HORIZONTAL = 13;
+  public static final int CMD_HEADER = 6;
+  public static final int TILDE = 14;
+  public static final int CMD_SHEET = 5;
+  public static final int DOLLARSIGN = 9;
+  public static final int CMD_TITLE = 4;
   public static final int error = 1;
-  public static final int KW_LABLETVIDEO = 12;
-  public static final int KW_HORIZONTALTHREE = 15;
-  public static final int KW_LABLETCHECK = 11;
-  public static final int KW_LABLETHEADER = 10;
-  public static final int KW_BEGIN = 3;
-  public static final int KW_TITLE = 2;
+  public static final int HASHMARK = 10;
+  public static final int RIGHTCURLYBRACE = 13;
+  public static final int LATEXSTRING = 2;
+  public static final int UNDERSCORE = 11;
+  public static final int AMPERSAND = 8;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
-  "KW_TITLE",
-  "KW_BEGIN",
-  "KW_END",
-  "KW_LABLETSHEET",
-  "KW_LABLETVIDEOPAGE",
-  "KW_LABLETMOTIONPAGE",
-  "KW_LABLETCALCYSPEED",
-  "KW_LABLETTEXT",
-  "KW_LABLETHEADER",
-  "KW_LABLETCHECK",
-  "KW_LABLETVIDEO",
-  "KW_HORIZONTAL",
-  "KW_HORIZONTALTWO",
-  "KW_HORIZONTALTHREE",
-  "LCURLY",
-  "RCURLY",
-  "BACKSLASH",
   "LATEXSTRING",
-  "SQUARESTRING"
+  "KW_TITLE",
+  "CMD_TITLE",
+  "CMD_SHEET",
+  "CMD_HEADER",
+  "CMD_TEXT",
+  "AMPERSAND",
+  "DOLLARSIGN",
+  "HASHMARK",
+  "UNDERSCORE",
+  "LEFTCURLYBRACE",
+  "RIGHTCURLYBRACE",
+  "TILDE",
+  "CARROT",
+  "BACKSLASH"
   };
 }
 

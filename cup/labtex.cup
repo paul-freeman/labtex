@@ -6,69 +6,94 @@ import java_cup.runtime.*;
 class LabParser;
 action code {:
     Integer sheetnumber = 0;
-    Integer horizontalnumber = 0;
-    Integer verticalnumber = 0;
-    Integer videonumber = 0;
     String element = null;
-    String prev = null;
 :}
 
-/* keywords */
-terminal    KW_TITLE,
-            KW_BEGIN,
-            KW_END,
-            KW_LABLETSHEET,
-            KW_LABLETVIDEOPAGE,
-            KW_LABLETMOTIONPAGE,
-            KW_LABLETCALCYSPEED,
-            KW_LABLETTEXT,
-            KW_LABLETHEADER,
-            KW_LABLETCHECK,
-            KW_LABLETVIDEO,
-            KW_HORIZONTAL,
-            KW_HORIZONTALTWO,
-            KW_HORIZONTALTHREE;
+/* basics */
+terminal String LATEXSTRING;
 
-/* symbold */
-terminal    LCURLY,
-            RCURLY,
-            BACKSLASH;
-terminal String  LATEXSTRING, SQUARESTRING;
+/* keywords */
+terminal        KW_TITLE;
+
+/* commands */
+terminal        CMD_TITLE,
+                CMD_SHEET,
+                CMD_HEADER,
+                CMD_TEXT;
+
+/* symbols */
+terminal        AMPERSAND,
+                DOLLARSIGN,
+                HASHMARK,
+                UNDERSCORE,
+                LEFTCURLYBRACE,
+                RIGHTCURLYBRACE,
+                TILDE,
+                CARROT,
+                BACKSLASH;
 
 /* non-terminals */
-non terminal    lab, sheets, sheet, elem, elems, named_elem, named_elems;
-non terminal    normal_sheet, video_sheet, motion_sheet, calc_y_sheet;
-non terminal    horizontal, vertical;
-non terminal    title;
+non terminal            tex_stuff, symbol, tex, lab, title;
+non terminal            section, sheets, sheet, normal_sheet, video_sheet, motion_sheet, calc_y_sheet;
+non terminal            find_left, find_left_sym, elems, elem;
 
-/* grammar */
+/***********
+ * grammar *
+ ***********/
 
-// a lab is a title with a number of sheets
-lab ::= title sheets {: System.out.println("end"); :};
+tex     ::= tex_stuff lab | lab ;
+lab     ::= title sheets {: System.out.println("end"); :} ;
+sheets  ::= section sheets | section ;
+section ::= tex_stuff sheet | sheet ;
+sheet   ::= normal_sheet | video_sheet | motion_sheet | calc_y_sheet;
 
-// titles are always in one format
-title ::=   KW_TITLE LCURLY LATEXSTRING:ls
-            {:  System.out.print("Lablet = {\n\tinterface = 1.0,\n\ttitle = ");
-                System.out.print("\"(TeX) " + ls + "\"\n}\n\n\n");
-                System.out.println("function Lablet.buildActivity(builder)"); :}
-            RCURLY
-            ;
+title ::=       CMD_TITLE find_left LEFTCURLYBRACE LATEXSTRING:ls RIGHTCURLYBRACE
+                {:  System.out.print("Lablet = {\n\tinterface = 1.0,\n\ttitle = ");
+                    System.out.print("\"(TeX) " + ls + "\"\n}\n\n\n");
+                    System.out.println("function Lablet.buildActivity(builder)"); :}
+                ;
 
-// one or more sheets
-sheets ::= sheet sheets | sheet ;
-
-// three kinds of sheets
-sheet ::= normal_sheet | video_sheet | motion_sheet | calc_y_sheet;
-
-normal_sheet ::=    KW_BEGIN LCURLY KW_LABLETSHEET RCURLY LCURLY LATEXSTRING:ls RCURLY
+normal_sheet ::=    CMD_SHEET find_left LEFTCURLYBRACE LATEXSTRING:ls RIGHTCURLYBRACE
                     {:  ++sheetnumber;
                         System.out.println();
                         System.out.println("\t-- SHEET "+sheetnumber);
                         System.out.println("\tlocal sheet = builder:create(\"Sheet\")");
                         System.out.println("\tbuilder:add(sheet)");
                         System.out.println("\tsheet:setTitle(\"" + ls + "\")"); :}
-                    elems ;
+                    elems
+                    ;
 
+elems ::= elems elem | elem ;
+elem ::=
+            CMD_TEXT LATEXSTRING:ls
+            {: System.out.println("\tsheet:addText(\"" + ls + "\")"); :}
+/*
+            |
+            KW_LABLETHEADER LCURLY LATEXSTRING:s
+            {:
+                System.out.println("\tsheet:addHeader(\""+s+"\")");
+            :}
+            RCURLY
+            |
+            KW_LABLETCHECK LCURLY LATEXSTRING:s
+            {:
+                System.out.println("\tsheet:addCheckQuestion(\""+s+"\")");
+            :}
+            RCURLY
+            |
+            KW_LABLETVIDEO LCURLY LATEXSTRING:s1 RCURLY LCURLY LATEXSTRING:s2
+            {:
+                ++videonumber;
+                System.out.println("\tlocal cameraExperiment"+videonumber+" = sheet:addCameraExperiment()");
+                System.out.println("\tcameraExperiment"+videonumber+":setDescriptionText(\""+s2+"\")");
+                System.out.println("\tlocal "+s1+" = cameraExperiment"+videonumber+":getExperiment()");
+            :}
+            RCURLY
+            |
+            horizontal
+*/
+            ;
+/*
 video_sheet ::=     KW_BEGIN LCURLY KW_LABLETVIDEOPAGE RCURLY LCURLY LATEXSTRING:ls RCURLY
                     {:  ++sheetnumber;
                         System.out.println();
@@ -114,37 +139,6 @@ calc_y_sheet ::=    KW_LABLETCALCYSPEED LCURLY LATEXSTRING:l1 RCURLY
                         System.out.println("\tsheet:setHeader(\"" + l3 + "\")"); :}
                     ;
 
-elems ::= elem elems | elem ;
-elem ::=
-            KW_LABLETTEXT LCURLY LATEXSTRING:s
-            {:
-                System.out.println("\tsheet:addText(\""+s+"\")");
-            :}
-            RCURLY
-            |
-            KW_LABLETHEADER LCURLY LATEXSTRING:s
-            {:
-                System.out.println("\tsheet:addHeader(\""+s+"\")");
-            :}
-            RCURLY
-            |
-            KW_LABLETCHECK LCURLY LATEXSTRING:s
-            {:
-                System.out.println("\tsheet:addCheckQuestion(\""+s+"\")");
-            :}
-            RCURLY
-            |
-            KW_LABLETVIDEO LCURLY LATEXSTRING:s1 RCURLY LCURLY LATEXSTRING:s2
-            {:
-                ++videonumber;
-                System.out.println("\tlocal cameraExperiment"+videonumber+" = sheet:addCameraExperiment()");
-                System.out.println("\tcameraExperiment"+videonumber+":setDescriptionText(\""+s2+"\")");
-                System.out.println("\tlocal "+s1+" = cameraExperiment"+videonumber+":getExperiment()");
-            :}
-            RCURLY
-            |
-            horizontal
-            ;
 named_elems ::=
             named_elem named_elems
             | named_elem ;
@@ -204,3 +198,10 @@ vertical ::=
             named_elems
             {: element = prev; :}
             ;
+*/
+tex_stuff ::=   tex_stuff symbol | symbol ;
+symbol    ::=   AMPERSAND | DOLLARSIGN | HASHMARK | UNDERSCORE | LEFTCURLYBRACE | RIGHTCURLYBRACE |
+                TILDE | CARROT | BACKSLASH | LATEXSTRING ;
+
+find_left     ::=   find_left find_left_sym | find_left_sym;
+find_left_sym ::=   AMPERSAND | DOLLARSIGN | HASHMARK | UNDERSCORE | TILDE | CARROT | BACKSLASH | LATEXSTRING ;

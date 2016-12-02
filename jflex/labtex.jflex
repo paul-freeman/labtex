@@ -28,120 +28,103 @@ import java_cup.runtime.*;
 	}
 %}
 
-LineTerminator = \r|\n|\r\n
-WhiteSpace = {LineTerminator} | [ \t\f]
-Comment = "%" [^\r\n]* ~{LineTerminator}
+LineTerminator      = \r|\n|\r\n
+NonLineTerminator   = [ \t\f]
+WhiteSpace          = {LineTerminator} | {NonLineTerminator}
+SquishSpace         = {LineTerminator}
+                      | ( {NonLineTerminator}+ {LineTerminator}? {NonLineTerminator}* )
+                      | ( {NonLineTerminator}* {LineTerminator}? {NonLineTerminator}+ )
+BlankLine           = {LineTerminator} {WhiteSpace}* {LineTerminator}
 
-ValidLaTeX = [^&%$#_{}~\^\\\r\n\t\f \"]
+/* Labtex commands must be LaTeX comments with a specific prefix */
+Prefix = "%" [ \t]* ">>" [ \t]* "lablet:"
 
-SquareString = "\[" [^\]]* "\]"
+Special    = [&%$#_{}~\^\\]
+NonSpecial = [^&%$#_{}~\^\\]
+Backslash  = \\
 
-LabletSheet     = "\{labletsheet\}"
-LabletVideoPage = "\{labletvideopage\}"
-MotionPage      = "\\labletmotionpage"
-CalcYSpeed      = "\\labletcalcyspeed"
-AnySheet        = {LabletSheet} | {LabletVideoPage}
-BeginAnySheet   = ( "\\begin" {SquareString}? {AnySheet} ) | {MotionPage} | {CalcYSpeed}
-EndAnySheet     = "\\end" {AnySheet}
-
-Key   = {WhiteSpace}* [a-zA-Z_] [a-zA-Z_0-9]* {WhiteSpace}* [=]
-Value = {WhiteSpace}* [a-zA-Z_] [a-zA-Z_0-9]* {WhiteSpace}* [,]?
-
-%state TITLE
-%state TITLED
-%state SHEET
+%state COMMAND
 %state LATEXSTRING
-%state OPTIONS
+%state COMMENT
 
 %%
 
-{Comment}           { /* always ignore */ }
-
 <YYINITIAL> {
-    /* scan to find the title */
-    "\\title"       { yypushback(yylength()); yybegin(TITLE); }
-    {BeginAnySheet} { throw new Error("Missing title"); }
-    [^]             { /* ignore */ }
+    /* gobble whitespace */
+    {WhiteSpace}+           { /* ignore */ }
+
+    /* scan to find commands */
+    {Prefix}                { yybegin(COMMAND); }
+
+    /* check for LaTeX keywords we may be interested in */
+    "title"                 { System.out.println("(KW_TITLE)"+yytext()); return symbol(LabParserSym.KW_TITLE); }
+
+    /* non-special characters start a LaTeX string */
+    {NonSpecial}            { string.setLength(0); string.append(yytext()); yybegin(LATEXSTRING); }
+
+    /* special characters generate tokens */
+    "&"                     { System.out.println("(AMPERSAND)"+yytext()); return symbol(LabParserSym.AMPERSAND); }
+    "\$"                    { System.out.println("(DOLLARSIGN)"+yytext()); return symbol(LabParserSym.DOLLARSIGN); }
+    "#"                     { System.out.println("(HASHMARK)"+yytext()); return symbol(LabParserSym.HASHMARK); }
+    "_"                     { System.out.println("(UNDERSCORE)"+yytext()); return symbol(LabParserSym.UNDERSCORE); }
+    "\{"                    { System.out.println("(LEFTCURLYBRACE)"+yytext()); return symbol(LabParserSym.LEFTCURLYBRACE); }
+    "\}"                    { System.out.println("(RIGHTCURLYBRACE)"+yytext()); return symbol(LabParserSym.RIGHTCURLYBRACE); }
+    "~"                     { System.out.println("(TILDE)"+yytext()); return symbol(LabParserSym.TILDE); }
+    "\^"                    { System.out.println("(CARROT)"+yytext()); return symbol(LabParserSym.CARROT); }
+    {Backslash}             { System.out.println("(BACKSLASH)"+yytext()); return symbol(LabParserSym.BACKSLASH); }
+
+    "%"                     { yypushback(1); yybegin(COMMENT); }
+    [^]                     { System.out.println("(INVALID)"+yytext()); /* ignore */ }
 }
 
-<TITLE> {
-    /* parse title */
-    "\\title"       { return symbol(LabParserSym.KW_TITLE); }
-    [\{]            { return symbol(LabParserSym.LCURLY); }
-    [\}]            { yybegin(TITLED);
-                      return symbol(LabParserSym.RCURLY); }
-    {SquareString}  { /* ignore */ }
-    [^]             { yybegin(LATEXSTRING);
-                      string.setLength(0);
-                      prior_state = TITLE;
-                      yypushback(1); }
+<COMMAND> {
+    "title"                 { yybegin(YYINITIAL); System.out.println("(CMD_TITLE)title"); return symbol(LabParserSym.CMD_TITLE); }
+    "sheet"                 { yybegin(YYINITIAL); System.out.println("(CMD_SHEET)sheet"); return symbol(LabParserSym.CMD_SHEET); }
+    "header"                { yybegin(YYINITIAL); System.out.println("(CMD_HEADER)header"); return symbol(LabParserSym.CMD_HEADER); }
+    "text"                  { yybegin(YYINITIAL); System.out.println("(CMD_TEXT)text"); return symbol(LabParserSym.CMD_TEXT); }
+    [^]                     { yypushback(1); yybegin(YYINITIAL); System.out.println("(INVALID)"+yytext()); }
 }
 
-<TITLED> {
-    /* scan to find a sheet */
-    {BeginAnySheet} { yypushback(yylength()); yybegin(SHEET); }
-    [^]             { /* ignore */ }
-
-    /*  String s = yytext().trim();
-        s = s.substring(7, s.length()-18);
-        System.out.println("SQUARE "+s);
-        return symbol(LabParserSym.VIDEO_OP, s);
-    } */
-}
-
-<SHEET> {
-    /* parse sheet */
-    {EndAnySheet}       { yybegin(TITLED); }
-    "\\begin"           { return symbol(LabParserSym.KW_BEGIN); }
-    "\\end"             { return symbol(LabParserSym.KW_END); }
-    "labletsheet"       { return symbol(LabParserSym.KW_LABLETSHEET); }
-    "labletvideopage"   { return symbol(LabParserSym.KW_LABLETVIDEOPAGE); }
-    {MotionPage}        { return symbol(LabParserSym.KW_LABLETMOTIONPAGE); }
-    {CalcYSpeed}        { return symbol(LabParserSym.KW_LABLETCALCYSPEED); }
-    "\\lablettext"      { return symbol(LabParserSym.KW_LABLETTEXT); }
-    "\\labletheader"    { return symbol(LabParserSym.KW_LABLETHEADER); }
-    "\\labletcheck"     { return symbol(LabParserSym.KW_LABLETCHECK); }
-    "\\labletvideo"     { return symbol(LabParserSym.KW_LABLETVIDEO); }
-    "\\horizontal"      { return symbol(LabParserSym.KW_HORIZONTAL); }
-    "\\horizontaltwo"   { return symbol(LabParserSym.KW_HORIZONTALTWO); }
-    "\\horizontalthree" { return symbol(LabParserSym.KW_HORIZONTALTHREE); }
-    [\\]                { return symbol(LabParserSym.BACKSLASH); }
-    [\{]                { return symbol(LabParserSym.LCURLY); }
-    [\}]                { return symbol(LabParserSym.RCURLY); }
-    [\[]                { yybegin(OPTIONS);
-                          /* return symbol(LabParserSym.LEFTSQUARE); */ }
-    {WhiteSpace}+       { /* gobble */ }
-    [^]                 { yybegin(LATEXSTRING);
-                          string.setLength(0);
-                          prior_state = SHEET;
-                          yypushback(1); }
-}
-
-/*
- * For now, we just look for valid characters
- * eventually, we will want to support escape commands
- */
 <LATEXSTRING> {
-    {WhiteSpace}+   { string.append(' '); }
-    [\"]            { string.append("\\\""); }
-    {ValidLaTeX}+   { string.append(yytext()); }
-    [^]             { yypushback(1);
-                      yybegin(prior_state);
-                      return symbol(LabParserSym.LATEXSTRING, string.toString()); }
+    /* get the entire LaTeX string */
+
+    /* squish whitespace in standard LaTeX fashion */
+    {SquishSpace}           { string.append(" "); }
+
+    /* handle LaTeX special characters */
+    {Backslash} "&"         { string.append("&"); }
+    {Backslash} "%"         { string.append("%"); }
+    {Backslash} "\$"        { string.append("$"); }
+    {Backslash} "#"         { string.append("#"); }
+    {Backslash} "_"         { string.append("_"); }
+    {Backslash} "\{"        { string.append("{"); }
+    {Backslash} "\}"        { string.append("}"); }
+    {Backslash} "~"         { string.append("~"); }
+    {Backslash} "\^"        { string.append("^"); }
+    {Backslash} {Backslash} { string.append("\\\\"); }
+
+    /* handle Lua special characters */
+    "\""                    { string.append("\\\""); }
+    "'"                     { string.append("\\\'"); }
+    "\["                    { string.append("\\["); }
+    "\]"                    { string.append("\\]"); }
+
+    /* now check for invalid string characters and blank lines */
+    \$                      { /* TODO: implement math mode */ }
+    {Special}               { yypushback(1);
+                              yybegin(YYINITIAL);
+                              System.out.println("(LATEXSTRING)"+string.toString().replaceAll("(\\r|\\n)", ""));
+                              return symbol(LabParserSym.LATEXSTRING, string.toString()); }
+    {BlankLine}             { yybegin(YYINITIAL);
+                              System.out.println("(LATEXSTRING)"+string.toString().replaceAll("(\\r|\\n)", ""));
+                              return symbol(LabParserSym.LATEXSTRING, string.toString()); }
+
+    /* anything else just gets added onto the string */
+    [^]                     { string.append(yytext()); }
 }
 
-/* not used yet */
-<OPTIONS> {
-    [\]]    { yybegin(SHEET); /* return symbol(LabParserSym.RIGHTSQUARE); */ }
-    {Key}   { /* return symbol(LabParserSym.LATEXSTRING, yytext().substring(0,yylength()-1)); */ }
-    {Value} { /*
-                if (yytext().endsWith(",") {
-                    return symbol(LabParserSym.LATEXSTRING, yytext().substring(0,yylength()-1));
-                } else {
-                    return symbol(LabParserSym.LATEXSTRING, yytext());
-                }
-            */ }
-    {WhiteSpace}+ { /* gobble */ }
+<COMMENT> {
+    %.*                      { yybegin(YYINITIAL); }
 }
 
 <<EOF>> { return symbol(LabParserSym.EOF); }
