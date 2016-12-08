@@ -10,7 +10,8 @@ action code {:
 :}
 
 /* basics */
-terminal String LATEXSTRING;
+terminal        WHITESPACE, BLANKLINE;
+terminal String LATEXSTRING, LATEX_CMD, LATEX_HREF;
 
 /* keywords */
 terminal        KW_TITLE;
@@ -33,40 +34,160 @@ terminal        AMPERSAND,
                 BACKSLASH;
 
 /* non-terminals */
-non terminal            tex_stuff, symbol, tex, lab, title;
-non terminal            section, sheets, sheet, normal_sheet, video_sheet, motion_sheet, calc_y_sheet;
-non terminal            find_left, find_left_sym, elems, elem;
+non terminal String           latex_cmd, tex_file, title;
+non terminal String           sheets, sheet, normal_sheet, video_sheet, motion_sheet, calc_y_sheet;
+non terminal String           find_cmd, find_cmd_sym, find_left, find_left_sym;
+non terminal String     latex_string, string_piece;
+non terminal String           sheet_elems, sheet_elem, sheet_text ;
+
+/* latex environments */
+non terminal String           curly_elems, curly_elem;
+non terminal String     curly_braced, dollar_env, dollar_string, dollar_piece;
+non terminal String     ddollar_env, ddollar_string, ddollar_piece;
+non terminal            left_curly_brace, right_curly_brace;
+non terminal String           cmd_title, cmd_sheet, cmd_text ;
+non terminal String     basic_string, groups;
+non terminal String     text_string, text_piece_command, text_piece_command_w_par ;
+non terminal            opt_whitespace, dollarsign, tilde;
+non terminal            href, href_string;
 
 /***********
  * grammar *
  ***********/
 
-tex     ::= tex_stuff lab | lab ;
-lab     ::= title sheets {: System.out.println("end"); :} ;
-sheets  ::= section sheets | section ;
-section ::= tex_stuff sheet | sheet ;
-sheet   ::= normal_sheet | video_sheet | motion_sheet | calc_y_sheet;
+/* a basic tex file should be a title with a series of sheets */
+tex_file            ::= title:t sheets:xs                           {: System.out.println(t + "\n" + xs + "\nend"); :}
+                        ;
+sheets              ::= sheets:xs sheet:s                           {: RESULT = xs + "\n\n" + s; :}
+                        | sheet:s                                   {: RESULT = s; :}
+                        ;
+/* there are a number of sheet types available */
+sheet               ::= normal_sheet:s                              {: RESULT = s; :}
+                        | video_sheet:s                             {: RESULT = s; :}
+                        | motion_sheet:s                            {: RESULT = s; :}
+                        | calc_y_sheet:s                            {: RESULT = s; :}
+                        ;
 
-title ::=       CMD_TITLE find_left LEFTCURLYBRACE LATEXSTRING:ls RIGHTCURLYBRACE
-                {:  System.out.print("Lablet = {\n\tinterface = 1.0,\n\ttitle = ");
-                    System.out.print("\"(TeX) " + ls + "\"\n}\n\n\n");
-                    System.out.println("function Lablet.buildActivity(builder)"); :}
-                ;
 
-normal_sheet ::=    CMD_SHEET find_left LEFTCURLYBRACE LATEXSTRING:ls RIGHTCURLYBRACE
-                    {:  ++sheetnumber;
-                        System.out.println();
-                        System.out.println("\t-- SHEET "+sheetnumber);
-                        System.out.println("\tlocal sheet = builder:create(\"Sheet\")");
-                        System.out.println("\tbuilder:add(sheet)");
-                        System.out.println("\tsheet:setTitle(\"" + ls + "\")"); :}
-                    elems
-                    ;
 
-elems ::= elems elem | elem ;
-elem ::=
-            CMD_TEXT LATEXSTRING:ls
-            {: System.out.println("\tsheet:addText(\"" + ls + "\")"); :}
+
+/* curly brace { ... } environment */
+curly_braced        ::= left_curly_brace curly_elems:s right_curly_brace    {: RESULT = s; :}
+                        ;
+curly_elems         ::= curly_elems:ls curly_elem:s                         {: RESULT = ls + s; :}
+                        | curly_elem:s                                      {: RESULT = s; :}
+                        ;
+curly_elem          ::= basic_string:s                                      {: RESULT = s; :}
+                        | dollar_env:s                                      {: RESULT = s; :}
+                        | ddollar_env:s                                     {: RESULT = s; :}
+                        | latex_cmd:s                                       {: RESULT = s; :}
+                        ;
+
+
+/* dollar (math mode) $ ... $ environment */
+dollar_env          ::= dollarsign dollar_string:ls dollarsign              {: RESULT = ls; :}
+                        ;
+dollar_string       ::= dollar_string:ls dollar_piece:s                     {: RESULT = ls + " " + s; :}
+                        | dollar_piece:s                                    {: RESULT = s; :}
+                        ;
+dollar_piece        ::= basic_string:ls                                     {: RESULT = ls; :}
+                        | latex_cmd:ls                                    {: RESULT = ls; :}
+                        | curly_braced:s                                    {: RESULT = s; :}
+                        ;
+
+/* double dollar $$ ... $$ environment */
+ddollar_env         ::= DOLLARSIGN dollarsign
+                        ddollar_string:ls
+                        DOLLARSIGN dollarsign                               {: RESULT = ls; :}
+                        ;
+ddollar_string      ::= ddollar_string:ls ddollar_piece:s                   {: RESULT = ls + " " + s; :}
+                        | ddollar_piece:s                                   {: RESULT = s; :}
+                        ;
+ddollar_piece       ::= basic_string:ls                                     {: RESULT = ls; :}
+                        | latex_cmd:ls                                      {: RESULT = ls; :}
+                        | curly_braced:s                                    {: RESULT = s; :}
+                        ;
+
+
+/* once a Lablet title command is found
+ * we use the next curly braced string
+ * as the title */
+title               ::= cmd_title latex_string:ls
+                        {:  RESULT =
+                            "Lablet = {\n\tinterface = 1.0,\n\ttitle = " +
+                            "\"(TeX) " + ls + "\"\n}\n\n\n" +
+                            "function Lablet.buildActivity(builder)"; :}
+                        RIGHTCURLYBRACE find_cmd
+                        ;
+find_left           ::=   find_left BACKSLASH
+                        | find_left LATEXSTRING
+                        | find_left WHITESPACE
+                        | /* empty */
+                        ;
+find_cmd            ::=   find_cmd LEFTCURLYBRACE
+                        | find_cmd RIGHTCURLYBRACE
+                        | find_cmd LATEXSTRING
+                        | find_cmd BACKSLASH
+                        | find_cmd WHITESPACE
+                        | find_cmd BLANKLINE
+                        | /* empty */
+                        ;
+
+
+
+normal_sheet        ::= cmd_sheet latex_string:ls RIGHTCURLYBRACE find_cmd sheet_elems:xs
+                        {:  ++sheetnumber;
+                            RESULT =
+                            "    -- SHEET " + sheetnumber + "\n" +
+                            "    local sheet = builder:create(\"Sheet\")\n" +
+                            "    builder:add(sheet)\n" +
+                            "    sheet:setTitle(\"" + ls + "\")\n" +
+                            xs; :}
+                        ;
+
+
+sheet_elems         ::= sheet_elems:xs sheet_elem:s                 {: RESULT = xs + s; :}
+                        | sheet_elem:s                              {: RESULT = s; :}
+                        ;
+sheet_elem          ::= cmd_text latex_string:ls           {: RESULT = "    sheet:addText(\"" + ls + "\")"; :}
+                        ;
+
+
+/* stuff that LaTeX treats as text */
+latex_string        ::= latex_string:ls string_piece:s              {: RESULT = ls + s; :}
+                        | string_piece:s                            {: RESULT = s; :}
+                        ;
+string_piece        ::= basic_string:s                              {: RESULT = s; :}
+                        | latex_cmd:s                               {: RESULT = s; :}
+                        | dollar_env:s                              {: RESULT = s; :}
+                        | curly_braced:s                            {: RESULT = s; :}
+                        | tilde                                     {: RESULT = " "; :}
+                        | href
+                        ;
+
+href ::= LATEX_HREF LEFTCURLYBRACE href_string RIGHTCURLYBRACE ;
+href_string ::= href_string basic_string | href_string UNDERSCORE | basic_string ;
+
+
+/* atomic units that are not divided */
+cmd_title           ::= CMD_TITLE find_left left_curly_brace ;
+cmd_sheet           ::= CMD_SHEET find_left left_curly_brace ;
+cmd_text            ::= CMD_TEXT opt_whitespace;
+left_curly_brace    ::= LEFTCURLYBRACE opt_whitespace ;
+right_curly_brace   ::= RIGHTCURLYBRACE opt_whitespace ;
+latex_cmd           ::= LATEX_CMD opt_whitespace ;
+dollarsign          ::= DOLLARSIGN opt_whitespace ;
+tilde               ::= TILDE opt_whitespace ;
+basic_string        ::= LATEXSTRING:ls WHITESPACE                           {: RESULT = ls + " "; :}
+                        | LATEXSTRING:ls                                    {: RESULT = ls; :}
+                        ;
+opt_whitespace      ::= WHITESPACE | /* nothing */ ;
+
+
+
+
+
+
 /*
             |
             KW_LABLETHEADER LCURLY LATEXSTRING:s
@@ -92,7 +213,6 @@ elem ::=
             |
             horizontal
 */
-            ;
 /*
 video_sheet ::=     KW_BEGIN LCURLY KW_LABLETVIDEOPAGE RCURLY LCURLY LATEXSTRING:ls RCURLY
                     {:  ++sheetnumber;
@@ -199,9 +319,3 @@ vertical ::=
             {: element = prev; :}
             ;
 */
-tex_stuff ::=   tex_stuff symbol | symbol ;
-symbol    ::=   AMPERSAND | DOLLARSIGN | HASHMARK | UNDERSCORE | LEFTCURLYBRACE | RIGHTCURLYBRACE |
-                TILDE | CARROT | BACKSLASH | LATEXSTRING ;
-
-find_left     ::=   find_left find_left_sym | find_left_sym;
-find_left_sym ::=   AMPERSAND | DOLLARSIGN | HASHMARK | UNDERSCORE | TILDE | CARROT | BACKSLASH | LATEXSTRING ;

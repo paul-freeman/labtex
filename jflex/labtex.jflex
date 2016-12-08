@@ -26,41 +26,55 @@ import java_cup.runtime.*;
 	private Symbol symbol(int type, Object value) {
 		return new Symbol(type, yyline, yycolumn, value);
 	}
+	private String escapeForLua(String str) {
+	    return str.replace("\"", "\\\"").replace("\'", "\\\'").replace("[", "\\[").replace("]", "\\]");
+	}
 %}
 
 LineTerminator      = \r|\n|\r\n
 NonLineTerminator   = [ \t\f]
 WhiteSpace          = {LineTerminator} | {NonLineTerminator}
-SquishSpace         = {LineTerminator}
-                      | ( {NonLineTerminator}+ {LineTerminator}? {NonLineTerminator}* )
-                      | ( {NonLineTerminator}* {LineTerminator}? {NonLineTerminator}+ )
-BlankLine           = {LineTerminator} {WhiteSpace}* {LineTerminator}
+BlankLine           = {WhiteSpace}* {LineTerminator} {WhiteSpace}* {LineTerminator} {WhiteSpace}*
 
 /* Labtex commands must be LaTeX comments with a specific prefix */
-Prefix = "%" [ \t]* ">>" [ \t]* "lablet:"
+Prefix          = "%" [ \t]* ">>" [ \t]* "lablet:"
+LabletTitle     = "%" [ \t]* ">>" [ \t]* "lablet:title"
+LabletSheet     = "%" [ \t]* ">>" [ \t]* "lablet:sheet"
 
-Special    = [&%$#_{}~\^\\]
-NonSpecial = [^&%$#_{}~\^\\]
+/* Special    = [&%$#_{}~\^\\] */
+NonSpecial = [^&%$#_{}~\^\\ \t\f\r\n] /* no special characters and no whitespace */
 Backslash  = \\
 
-%state COMMAND
-%state LATEXSTRING
-%state COMMENT
+/* strip equations and figures */
+Equation = "\\begin\{equation\}" ~"\\end\{equation\}"
+Figure   = "\\begin\{figure\}" ~"\\end\{figure\}"
+
+%state TITLE, TITLED, SHEET, ELEMENT, ELEMENTS
+%state TITLE_COMMENT, SHEET_COMMENT, ELEMENT_COMMENT
 
 %%
 
+/* scan to find commands */
+{Prefix} "title"            { yybegin(TITLE); System.out.println("(CMD_TITLE)title"); return symbol(LabParserSym.CMD_TITLE); }
+{Prefix} "sheet"            { yybegin(SHEET); System.out.println("(CMD_SHEET)sheet"); return symbol(LabParserSym.CMD_SHEET); }
+{Prefix} "header"           { yybegin(ELEMENT); System.out.println("(CMD_HEADER)header"); return symbol(LabParserSym.CMD_HEADER); }
+{Prefix} "text"             { yybegin(ELEMENT); System.out.println("(CMD_TEXT)text"); return symbol(LabParserSym.CMD_TEXT); }
+
+/* ignore advanced LaTeX stuff */
+{Equation}                  { System.out.println("(EQUATION)(equation omitted)"); return symbol(LabParserSym.LATEXSTRING, "(equation omitted)"); }
+{Figure}                    { System.out.println("(FIGURE)(figure omitted)"); return symbol(LabParserSym.LATEXSTRING, "(figure omitted)"); }
+
 <YYINITIAL> {
-    /* gobble whitespace */
-    {WhiteSpace}+           { /* ignore */ }
+    [^]                     { /* System.out.println("(IGNORE)"+yytext()); */ }
+}
 
-    /* scan to find commands */
-    {Prefix}                { yybegin(COMMAND); }
-
-    /* check for LaTeX keywords we may be interested in */
-    "title"                 { System.out.println("(KW_TITLE)"+yytext()); return symbol(LabParserSym.KW_TITLE); }
+<TITLE, SHEET, ELEMENT> {
+    /* whitespace is compressed to one token */
+    {WhiteSpace}+           { System.out.println("(WHITESPACE)"); return symbol(LabParserSym.WHITESPACE); }
 
     /* non-special characters start a LaTeX string */
-    {NonSpecial}            { string.setLength(0); string.append(yytext()); yybegin(LATEXSTRING); }
+    {NonSpecial}+           { System.out.println("(LATEXSTRING)"+yytext().replaceAll("(\\r|\\n)", ""));
+                              return symbol(LabParserSym.LATEXSTRING, escapeForLua(yytext())); }
 
     /* special characters generate tokens */
     "&"                     { System.out.println("(AMPERSAND)"+yytext()); return symbol(LabParserSym.AMPERSAND); }
@@ -72,59 +86,55 @@ Backslash  = \\
     "~"                     { System.out.println("(TILDE)"+yytext()); return symbol(LabParserSym.TILDE); }
     "\^"                    { System.out.println("(CARROT)"+yytext()); return symbol(LabParserSym.CARROT); }
     {Backslash}             { System.out.println("(BACKSLASH)"+yytext()); return symbol(LabParserSym.BACKSLASH); }
-
-    "%"                     { yypushback(1); yybegin(COMMENT); }
-    [^]                     { System.out.println("(INVALID)"+yytext()); /* ignore */ }
 }
 
-<COMMAND> {
-    "title"                 { yybegin(YYINITIAL); System.out.println("(CMD_TITLE)title"); return symbol(LabParserSym.CMD_TITLE); }
-    "sheet"                 { yybegin(YYINITIAL); System.out.println("(CMD_SHEET)sheet"); return symbol(LabParserSym.CMD_SHEET); }
-    "header"                { yybegin(YYINITIAL); System.out.println("(CMD_HEADER)header"); return symbol(LabParserSym.CMD_HEADER); }
-    "text"                  { yybegin(YYINITIAL); System.out.println("(CMD_TEXT)text"); return symbol(LabParserSym.CMD_TEXT); }
-    [^]                     { yypushback(1); yybegin(YYINITIAL); System.out.println("(INVALID)"+yytext()); }
+<TITLE> {
+    /* title must be located before the next blank line */
+    {BlankLine}             { yybegin(TITLED); System.out.println("(BLANKLINE)"); return symbol(LabParserSym.BLANKLINE); }
+
+    /* comments are ignored */
+    "%"                     { yypushback(1); yybegin(TITLE_COMMENT); }
 }
 
-<LATEXSTRING> {
-    /* get the entire LaTeX string */
-
-    /* squish whitespace in standard LaTeX fashion */
-    {SquishSpace}           { string.append(" "); }
-
-    /* handle LaTeX special characters */
-    {Backslash} "&"         { string.append("&"); }
-    {Backslash} "%"         { string.append("%"); }
-    {Backslash} "\$"        { string.append("$"); }
-    {Backslash} "#"         { string.append("#"); }
-    {Backslash} "_"         { string.append("_"); }
-    {Backslash} "\{"        { string.append("{"); }
-    {Backslash} "\}"        { string.append("}"); }
-    {Backslash} "~"         { string.append("~"); }
-    {Backslash} "\^"        { string.append("^"); }
-    {Backslash} {Backslash} { string.append("\\\\"); }
-
-    /* handle Lua special characters */
-    "\""                    { string.append("\\\""); }
-    "'"                     { string.append("\\\'"); }
-    "\["                    { string.append("\\["); }
-    "\]"                    { string.append("\\]"); }
-
-    /* now check for invalid string characters and blank lines */
-    \$                      { /* TODO: implement math mode */ }
-    {Special}               { yypushback(1);
-                              yybegin(YYINITIAL);
-                              System.out.println("(LATEXSTRING)"+string.toString().replaceAll("(\\r|\\n)", ""));
-                              return symbol(LabParserSym.LATEXSTRING, string.toString()); }
-    {BlankLine}             { yybegin(YYINITIAL);
-                              System.out.println("(LATEXSTRING)"+string.toString().replaceAll("(\\r|\\n)", ""));
-                              return symbol(LabParserSym.LATEXSTRING, string.toString()); }
-
-    /* anything else just gets added onto the string */
-    [^]                     { string.append(yytext()); }
+<TITLED> {
+    /* scan for sheets */
+    {LabletSheet}           { yybegin(SHEET); System.out.println("(CMD_SHEET)sheet"); return symbol(LabParserSym.CMD_SHEET); }
+    [^]                     { /* ignore */ }
 }
 
-<COMMENT> {
-    %.*                      { yybegin(YYINITIAL); }
+<SHEET> {
+    /* sheet title must be located before the next blank line */
+    {BlankLine}             { yybegin(ELEMENTS); System.out.println("(BLANKLINE)"); }
+
+    /* comments are ignored */
+    "%"                     { yypushback(1); yybegin(SHEET_COMMENT); }
+}
+
+<ELEMENTS> {
+    /* scan for Lablet elements */
+    [^]                     { /* ignore */ }
+}
+
+<ELEMENT> {
+    /* LaTeX commands start with a backslash */
+    {Backslash} "href"      { System.out.println("(LATEX_HREF)"+yytext()); return symbol(LabParserSym.LATEX_HREF, yytext()); }
+    {Backslash} [a-zA-Z_]+  { System.out.println("(LATEX_CMD)"+yytext()); return symbol(LabParserSym.LATEX_CMD, yytext()); }
+
+    {BlankLine}             { yybegin(TITLED); System.out.println("(BLANKLINE)"); return symbol(LabParserSym.BLANKLINE); }
+
+    "%"                     { yypushback(1); yybegin(ELEMENT_COMMENT); }
+}
+
+<TITLE_COMMENT> {
+    %.*                      { yybegin(TITLE); }
+}
+
+<SHEET_COMMENT> {
+    %.*                      { yybegin(SHEET); }
+}
+
+<ELEMENT_COMMENT> {
+    %.*                      { yybegin(ELEMENT); }
 }
 
 <<EOF>> { return symbol(LabParserSym.EOF); }
