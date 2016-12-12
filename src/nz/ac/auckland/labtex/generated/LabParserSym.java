@@ -8,26 +8,29 @@ package nz.ac.auckland.labtex.generated;
 /** CUP generated class containing symbol constants. */
 public class LabParserSym {
   /* terminals */
-  public static final int UNDERSCORE = 15;
+  public static final int UNDERSCORE = 17;
+  public static final int PERCENT = 14;
   public static final int LATEX_CMD = 5;
   public static final int LATEX_HREF = 6;
-  public static final int CARROT = 19;
-  public static final int TILDE = 18;
+  public static final int CMD_CHECK = 11;
+  public static final int CARROT = 21;
+  public static final int TILDE = 20;
   public static final int CMD_TITLE = 8;
   public static final int BLANKLINE = 3;
-  public static final int HASHMARK = 14;
+  public static final int HASHMARK = 16;
   public static final int CMD_HEADER = 10;
   public static final int EOF = 0;
-  public static final int CMD_TEXT = 11;
-  public static final int BACKSLASH = 20;
+  public static final int CMD_TEXT = 12;
+  public static final int ESCAPED_BACKSLASH = 23;
+  public static final int BACKSLASH = 22;
   public static final int LATEXSTRING = 4;
   public static final int CMD_SHEET = 9;
   public static final int error = 1;
-  public static final int RIGHTCURLYBRACE = 17;
-  public static final int LEFTCURLYBRACE = 16;
-  public static final int AMPERSAND = 12;
+  public static final int RIGHTCURLYBRACE = 19;
+  public static final int LEFTCURLYBRACE = 18;
+  public static final int AMPERSAND = 13;
   public static final int WHITESPACE = 2;
-  public static final int DOLLARSIGN = 13;
+  public static final int DOLLARSIGN = 15;
   public static final int KW_TITLE = 7;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -41,8 +44,10 @@ public class LabParserSym {
   "CMD_TITLE",
   "CMD_SHEET",
   "CMD_HEADER",
+  "CMD_CHECK",
   "CMD_TEXT",
   "AMPERSAND",
+  "PERCENT",
   "DOLLARSIGN",
   "HASHMARK",
   "UNDERSCORE",
@@ -50,7 +55,8 @@ public class LabParserSym {
   "RIGHTCURLYBRACE",
   "TILDE",
   "CARROT",
-  "BACKSLASH"
+  "BACKSLASH",
+  "ESCAPED_BACKSLASH"
   };
 }
 

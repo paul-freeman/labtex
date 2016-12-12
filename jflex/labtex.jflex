@@ -27,14 +27,22 @@ import java_cup.runtime.*;
 		return new Symbol(type, yyline, yycolumn, value);
 	}
 	private String escapeForLua(String str) {
-	    return str.replace("\"", "\\\"").replace("\'", "\\\'").replace("[", "\\[").replace("]", "\\]");
+	    return str.replace("\"", "\\\"")
+	              .replace("\'", "\\\'")
+	              .replace("[", "\\[")
+	              .replace("]", "\\]")
+	              .replace("``", "\\\"");
 	}
 %}
 
 LineTerminator      = \r|\n|\r\n
 NonLineTerminator   = [ \t\f]
-WhiteSpace          = {LineTerminator} | {NonLineTerminator}
-BlankLine           = {WhiteSpace}* {LineTerminator} {WhiteSpace}* {LineTerminator} {WhiteSpace}*
+WhiteSpace          = {LineTerminator}
+                      | {NonLineTerminator}+ {LineTerminator}? {NonLineTerminator}*
+                      | {NonLineTerminator}* {LineTerminator}? {NonLineTerminator}+
+BlankLine           = {NonLineTerminator}* {LineTerminator}
+                      {NonLineTerminator}* {LineTerminator}
+                      ({NonLineTerminator}|{LineTerminator})*
 
 /* Labtex commands must be LaTeX comments with a specific prefix */
 Prefix          = "%" [ \t]* ">>" [ \t]* "lablet:"
@@ -46,7 +54,7 @@ NonSpecial = [^&%$#_{}~\^\\ \t\f\r\n] /* no special characters and no whitespace
 Backslash  = \\
 
 /* strip equations and figures */
-Equation = "\\begin\{equation\}" ~"\\end\{equation\}"
+Equation = ("\\begin\{equation\}" ~"\\end\{equation\}") | ("\\[" ~"\\]")
 Figure   = "\\begin\{figure\}" ~"\\end\{figure\}"
 
 %state TITLE, TITLED, SHEET, ELEMENT, ELEMENTS
@@ -59,6 +67,7 @@ Figure   = "\\begin\{figure\}" ~"\\end\{figure\}"
 {Prefix} "sheet"            { yybegin(SHEET); System.out.println("(CMD_SHEET)sheet"); return symbol(LabParserSym.CMD_SHEET); }
 {Prefix} "header"           { yybegin(ELEMENT); System.out.println("(CMD_HEADER)header"); return symbol(LabParserSym.CMD_HEADER); }
 {Prefix} "text"             { yybegin(ELEMENT); System.out.println("(CMD_TEXT)text"); return symbol(LabParserSym.CMD_TEXT); }
+{Prefix} "check"            { yybegin(ELEMENT); System.out.println("(CMD_CHECK)check"); return symbol(LabParserSym.CMD_CHECK); }
 
 /* ignore advanced LaTeX stuff */
 {Equation}                  { System.out.println("(EQUATION)(equation omitted)"); return symbol(LabParserSym.LATEXSTRING, "(equation omitted)"); }
@@ -70,7 +79,7 @@ Figure   = "\\begin\{figure\}" ~"\\end\{figure\}"
 
 <TITLE, SHEET, ELEMENT> {
     /* whitespace is compressed to one token */
-    {WhiteSpace}+           { System.out.println("(WHITESPACE)"); return symbol(LabParserSym.WHITESPACE); }
+    {WhiteSpace}            { System.out.println("(WHITESPACE)"); return symbol(LabParserSym.WHITESPACE); }
 
     /* non-special characters start a LaTeX string */
     {NonSpecial}+           { System.out.println("(LATEXSTRING)"+yytext().replaceAll("(\\r|\\n)", ""));
@@ -78,6 +87,7 @@ Figure   = "\\begin\{figure\}" ~"\\end\{figure\}"
 
     /* special characters generate tokens */
     "&"                     { System.out.println("(AMPERSAND)"+yytext()); return symbol(LabParserSym.AMPERSAND); }
+    {Backslash} "%"         { System.out.println("(PERCENT)"+yytext()); return symbol(LabParserSym.PERCENT); }
     "\$"                    { System.out.println("(DOLLARSIGN)"+yytext()); return symbol(LabParserSym.DOLLARSIGN); }
     "#"                     { System.out.println("(HASHMARK)"+yytext()); return symbol(LabParserSym.HASHMARK); }
     "_"                     { System.out.println("(UNDERSCORE)"+yytext()); return symbol(LabParserSym.UNDERSCORE); }
@@ -86,6 +96,7 @@ Figure   = "\\begin\{figure\}" ~"\\end\{figure\}"
     "~"                     { System.out.println("(TILDE)"+yytext()); return symbol(LabParserSym.TILDE); }
     "\^"                    { System.out.println("(CARROT)"+yytext()); return symbol(LabParserSym.CARROT); }
     {Backslash}             { System.out.println("(BACKSLASH)"+yytext()); return symbol(LabParserSym.BACKSLASH); }
+    {Backslash} {Backslash} { System.out.println("(ESCAPED_BACKSLASH)"+yytext()); return symbol(LabParserSym.ESCAPED_BACKSLASH); }
 }
 
 <TITLE> {
@@ -119,6 +130,9 @@ Figure   = "\\begin\{figure\}" ~"\\end\{figure\}"
     /* LaTeX commands start with a backslash */
     {Backslash} "href"      { System.out.println("(LATEX_HREF)"+yytext()); return symbol(LabParserSym.LATEX_HREF, yytext()); }
     {Backslash} [a-zA-Z_]+  { System.out.println("(LATEX_CMD)"+yytext()); return symbol(LabParserSym.LATEX_CMD, yytext()); }
+    {Backslash} "["         { System.out.println("(LATEX_CMD)"+yytext()); return symbol(LabParserSym.LATEX_CMD, yytext()); }
+    {Backslash} "]"         { System.out.println("(LATEX_CMD)"+yytext()); return symbol(LabParserSym.LATEX_CMD, yytext()); }
+    {Backslash} ","         { System.out.println("(LATEX_CMD)"+yytext()); return symbol(LabParserSym.LATEX_CMD, yytext()); }
 
     {BlankLine}             { yybegin(TITLED); System.out.println("(BLANKLINE)"); return symbol(LabParserSym.BLANKLINE); }
 
@@ -126,15 +140,15 @@ Figure   = "\\begin\{figure\}" ~"\\end\{figure\}"
 }
 
 <TITLE_COMMENT> {
-    %.*                      { yybegin(TITLE); }
+    %.* {WhiteSpace}        { yybegin(TITLE); }
 }
 
 <SHEET_COMMENT> {
-    %.*                      { yybegin(SHEET); }
+    %.* {WhiteSpace}        { yybegin(SHEET); }
 }
 
 <ELEMENT_COMMENT> {
-    %.*                      { yybegin(ELEMENT); }
+    %.* {WhiteSpace}        { yybegin(ELEMENT); }
 }
 
 <<EOF>> { return symbol(LabParserSym.EOF); }

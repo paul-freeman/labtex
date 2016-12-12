@@ -20,10 +20,12 @@ terminal        KW_TITLE;
 terminal        CMD_TITLE,
                 CMD_SHEET,
                 CMD_HEADER,
+                CMD_CHECK,
                 CMD_TEXT;
 
 /* symbols */
 terminal        AMPERSAND,
+                PERCENT,
                 DOLLARSIGN,
                 HASHMARK,
                 UNDERSCORE,
@@ -31,13 +33,14 @@ terminal        AMPERSAND,
                 RIGHTCURLYBRACE,
                 TILDE,
                 CARROT,
-                BACKSLASH;
+                BACKSLASH,
+                ESCAPED_BACKSLASH;
 
 /* non-terminals */
 non terminal String           latex_cmd, tex_file, title;
 non terminal String           sheets, sheet, normal_sheet, video_sheet, motion_sheet, calc_y_sheet;
 non terminal String           find_cmd, find_cmd_sym, find_left, find_left_sym;
-non terminal String     latex_string, string_piece;
+non terminal String           latex_string, string_piece;
 non terminal String           sheet_elems, sheet_elem, sheet_text ;
 
 /* latex environments */
@@ -45,10 +48,10 @@ non terminal String           curly_elems, curly_elem;
 non terminal String     curly_braced, dollar_env, dollar_string, dollar_piece;
 non terminal String     ddollar_env, ddollar_string, ddollar_piece;
 non terminal            left_curly_brace, right_curly_brace;
-non terminal String           cmd_title, cmd_sheet, cmd_text ;
+non terminal String           cmd_title, cmd_sheet, cmd_text, cmd_header, cmd_check ;
 non terminal String     basic_string, groups;
 non terminal String     text_string, text_piece_command, text_piece_command_w_par ;
-non terminal            opt_whitespace, dollarsign, tilde;
+non terminal            opt_whitespace, dollarsign, tilde, percent, escaped_backslash;
 non terminal            href, href_string;
 
 /***********
@@ -56,7 +59,7 @@ non terminal            href, href_string;
  ***********/
 
 /* a basic tex file should be a title with a series of sheets */
-tex_file            ::= title:t sheets:xs                           {: System.out.println(t + "\n" + xs + "\nend"); :}
+tex_file            ::= title:t sheets:xs                           {: RESULT = t + "\n" + xs + "\nend"; :}
                         ;
 sheets              ::= sheets:xs sheet:s                           {: RESULT = xs + "\n\n" + s; :}
                         | sheet:s                                   {: RESULT = s; :}
@@ -72,27 +75,33 @@ sheet               ::= normal_sheet:s                              {: RESULT = 
 
 
 /* curly brace { ... } environment */
-curly_braced        ::= left_curly_brace curly_elems:s right_curly_brace    {: RESULT = s; :}
+curly_braced        ::= left_curly_brace curly_elems:s right_curly_brace:w    {: RESULT = s + w; :}
                         ;
 curly_elems         ::= curly_elems:ls curly_elem:s                         {: RESULT = ls + s; :}
                         | curly_elem:s                                      {: RESULT = s; :}
                         ;
 curly_elem          ::= basic_string:s                                      {: RESULT = s; :}
+                        | curly_braced:s                                    {: RESULT = s; :}
                         | dollar_env:s                                      {: RESULT = s; :}
                         | ddollar_env:s                                     {: RESULT = s; :}
-                        | latex_cmd:s                                       {: RESULT = s; :}
+                        | latex_cmd                                         {: RESULT = ""; :}
+                        | UNDERSCORE                                        {: RESULT = "_"; :}
+                        | CARROT                                            {: RESULT = "^"; :}
                         ;
 
 
 /* dollar (math mode) $ ... $ environment */
-dollar_env          ::= dollarsign dollar_string:ls dollarsign              {: RESULT = ls; :}
+dollar_env          ::= dollarsign dollar_string:ls DOLLARSIGN WHITESPACE   {: RESULT = ls + " "; :}
+                        | dollarsign dollar_string:ls DOLLARSIGN            {: RESULT = ls; :}
                         ;
 dollar_string       ::= dollar_string:ls dollar_piece:s                     {: RESULT = ls + " " + s; :}
                         | dollar_piece:s                                    {: RESULT = s; :}
                         ;
 dollar_piece        ::= basic_string:ls                                     {: RESULT = ls; :}
-                        | latex_cmd:ls                                    {: RESULT = ls; :}
+                        | latex_cmd                                         {: RESULT = ""; :}
                         | curly_braced:s                                    {: RESULT = s; :}
+                        | UNDERSCORE                                        {: RESULT = "_"; :}
+                        | CARROT                                            {: RESULT = "^"; :}
                         ;
 
 /* double dollar $$ ... $$ environment */
@@ -104,7 +113,7 @@ ddollar_string      ::= ddollar_string:ls ddollar_piece:s                   {: R
                         | ddollar_piece:s                                   {: RESULT = s; :}
                         ;
 ddollar_piece       ::= basic_string:ls                                     {: RESULT = ls; :}
-                        | latex_cmd:ls                                      {: RESULT = ls; :}
+                        | latex_cmd                                         {: RESULT = ""; :}
                         | curly_braced:s                                    {: RESULT = s; :}
                         ;
 
@@ -149,7 +158,9 @@ normal_sheet        ::= cmd_sheet latex_string:ls RIGHTCURLYBRACE find_cmd sheet
 sheet_elems         ::= sheet_elems:xs sheet_elem:s                 {: RESULT = xs + s; :}
                         | sheet_elem:s                              {: RESULT = s; :}
                         ;
-sheet_elem          ::= cmd_text latex_string:ls           {: RESULT = "    sheet:addText(\"" + ls + "\")"; :}
+sheet_elem          ::= cmd_text latex_string:ls BLANKLINE find_cmd          {: RESULT = "    sheet:addText(\"" + ls + "\")\n"; :}
+                        | cmd_header latex_string:ls BLANKLINE find_cmd      {: RESULT = "    sheet:addHeader(\"" + ls + "\")\n"; :}
+                        | cmd_check latex_string:ls BLANKLINE find_cmd       {: RESULT = "    sheet:addCheckQuestion(\"" + ls + "\")\n"; :}
                         ;
 
 
@@ -158,10 +169,13 @@ latex_string        ::= latex_string:ls string_piece:s              {: RESULT = 
                         | string_piece:s                            {: RESULT = s; :}
                         ;
 string_piece        ::= basic_string:s                              {: RESULT = s; :}
-                        | latex_cmd:s                               {: RESULT = s; :}
+                        | latex_cmd                                 {: RESULT = ""; :}
                         | dollar_env:s                              {: RESULT = s; :}
+                        | ddollar_env:s                             {: RESULT = s; :}
                         | curly_braced:s                            {: RESULT = s; :}
                         | tilde                                     {: RESULT = " "; :}
+                        | percent                                   {: RESULT = "%"; :}
+                        | escaped_backslash                         {: RESULT = "\n"; :}
                         | href
                         ;
 
@@ -173,11 +187,17 @@ href_string ::= href_string basic_string | href_string UNDERSCORE | basic_string
 cmd_title           ::= CMD_TITLE find_left left_curly_brace ;
 cmd_sheet           ::= CMD_SHEET find_left left_curly_brace ;
 cmd_text            ::= CMD_TEXT opt_whitespace;
+cmd_header          ::= CMD_HEADER opt_whitespace;
+cmd_check           ::= CMD_CHECK opt_whitespace;
 left_curly_brace    ::= LEFTCURLYBRACE opt_whitespace ;
-right_curly_brace   ::= RIGHTCURLYBRACE opt_whitespace ;
+right_curly_brace   ::= RIGHTCURLYBRACE WHITESPACE                          {: RESULT = " "; :}
+                        | RIGHTCURLYBRACE                                   {: RESULT = ""; :}
+                        ;
 latex_cmd           ::= LATEX_CMD opt_whitespace ;
 dollarsign          ::= DOLLARSIGN opt_whitespace ;
 tilde               ::= TILDE opt_whitespace ;
+percent             ::= PERCENT opt_whitespace ;
+escaped_backslash   ::= ESCAPED_BACKSLASH opt_whitespace                    {: RESULT = "\n"; :} ;
 basic_string        ::= LATEXSTRING:ls WHITESPACE                           {: RESULT = ls + " "; :}
                         | LATEXSTRING:ls                                    {: RESULT = ls; :}
                         ;
