@@ -46,8 +46,6 @@ BlankLine           = {NonLineTerminator}* {LineTerminator}
 
 /* Labtex commands must be LaTeX comments with a specific prefix */
 Prefix          = "%" [ \t]* ">>" [ \t]* "lablet:"
-LabletTitle     = "%" [ \t]* ">>" [ \t]* "lablet:title"
-LabletSheet     = "%" [ \t]* ">>" [ \t]* "lablet:sheet"
 
 /* Special    = [&%$#_{}~\^\\] */
 NonSpecial = [^&%$#_{}~\^\\ \t\f\r\n] /* no special characters and no whitespace */
@@ -64,7 +62,6 @@ Figure   = "\\begin\{figure\}" ~"\\end\{figure\}"
 
 /* scan to find commands */
 {Prefix} "sheet"            { yybegin(SHEET); System.out.println("(CMD_SHEET)sheet"); return symbol(LabParserSym.CMD_SHEET); }
-{Prefix} "videosheet"       { yybegin(SHEET); System.out.println("(CMD_VIDEOSHEET)videosheet"); return symbol(LabParserSym.CMD_VIDEOSHEET); }
 {Prefix} "motionsheet"      { yybegin(SHEET); System.out.println("(CMD_MOTIONSHEET)motionsheet"); return symbol(LabParserSym.CMD_MOTIONSHEET); }
 {Prefix} "calcysheet"       { yybegin(SHEET); System.out.println("(CMD_CALCYSHEET)calcysheet"); return symbol(LabParserSym.CMD_CALCYSHEET); }
 
@@ -75,9 +72,6 @@ Figure   = "\\begin\{figure\}" ~"\\end\{figure\}"
 {Prefix} "video"            { yybegin(ELEMENT); System.out.println("(CMD_VIDEO)video"); return symbol(LabParserSym.CMD_VIDEO); }
 {Prefix} "motionanalysisgraph"
                             { yybegin(ELEMENT); System.out.println("(CMD_MOTIONANALYSISGRAPH)"); return symbol(LabParserSym.CMD_MOTIONANALYSISGRAPH); }
-
-{Prefix} "horizontal"       { yybegin(ELEMENT); System.out.println("(CMD_HORIZONTAL)horizontal"); return symbol(LabParserSym.CMD_HORIZONTAL); }
-{Prefix} "endhorizontal"    { yybegin(ELEMENT); System.out.println("(CMD_ENDHORIZONTAL)endhorizontal"); return symbol(LabParserSym.CMD_ENDHORIZONTAL); }
 
 {Prefix} "export"           { yybegin(ELEMENT); System.out.println("(CMD_EXPORT)export"); return symbol(LabParserSym.CMD_EXPORT); }
 
@@ -121,7 +115,7 @@ Figure   = "\\begin\{figure\}" ~"\\end\{figure\}"
 
 <TITLED> {
     /* scan for sheets */
-    {LabletSheet}           { yybegin(SHEET); System.out.println("(CMD_SHEET)sheet"); return symbol(LabParserSym.CMD_SHEET); }
+    {Prefix} "sheet"        { yybegin(SHEET); System.out.println("(CMD_SHEET)sheet"); return symbol(LabParserSym.CMD_SHEET); }
     [^]                     { /* ignore */ }
 }
 
@@ -141,6 +135,7 @@ Figure   = "\\begin\{figure\}" ~"\\end\{figure\}"
 <ELEMENT> {
     /* LaTeX commands start with a backslash */
     {Backslash} "href"      { System.out.println("(LATEX_HREF)"+yytext()); return symbol(LabParserSym.LATEX_HREF, yytext()); }
+    {Backslash} "footnote"  { System.out.println("(LATEX_FOOTNOTE)"+yytext()); return symbol(LabParserSym.LATEX_FOOTNOTE, yytext()); }
     {Backslash} [a-zA-Z_]+  { System.out.println("(LATEX_CMD)"+yytext()); return symbol(LabParserSym.LATEX_CMD, yytext()); }
     {Backslash} "["         { System.out.println("(LATEX_CMD)"+yytext()); return symbol(LabParserSym.LATEX_CMD, yytext()); }
     {Backslash} "]"         { System.out.println("(LATEX_CMD)"+yytext()); return symbol(LabParserSym.LATEX_CMD, yytext()); }
