@@ -8,29 +8,37 @@ package nz.ac.auckland.labtex.generated;
 /** CUP generated class containing symbol constants. */
 public class LabParserSym {
   /* terminals */
-  public static final int UNDERSCORE = 17;
-  public static final int PERCENT = 14;
+  public static final int UNDERSCORE = 25;
+  public static final int PERCENT = 22;
   public static final int LATEX_CMD = 5;
+  public static final int CMD_ENDHORIZONTAL = 19;
+  public static final int CMD_VIDEOSHEET = 10;
+  public static final int CMD_VIDEO = 16;
   public static final int LATEX_HREF = 6;
-  public static final int CMD_CHECK = 11;
-  public static final int CARROT = 21;
-  public static final int TILDE = 20;
+  public static final int CMD_CHECK = 14;
+  public static final int CARROT = 29;
+  public static final int CMD_MOTIONSHEET = 11;
+  public static final int TILDE = 28;
+  public static final int CMD_CALCYSHEET = 12;
   public static final int CMD_TITLE = 8;
   public static final int BLANKLINE = 3;
-  public static final int HASHMARK = 16;
-  public static final int CMD_HEADER = 10;
+  public static final int HASHMARK = 24;
+  public static final int CMD_HEADER = 13;
   public static final int EOF = 0;
-  public static final int CMD_TEXT = 12;
-  public static final int ESCAPED_BACKSLASH = 23;
-  public static final int BACKSLASH = 22;
+  public static final int CMD_EXPORT = 20;
+  public static final int CMD_TEXT = 15;
+  public static final int ESCAPED_BACKSLASH = 31;
+  public static final int BACKSLASH = 30;
   public static final int LATEXSTRING = 4;
   public static final int CMD_SHEET = 9;
   public static final int error = 1;
-  public static final int RIGHTCURLYBRACE = 19;
-  public static final int LEFTCURLYBRACE = 18;
-  public static final int AMPERSAND = 13;
+  public static final int RIGHTCURLYBRACE = 27;
+  public static final int LEFTCURLYBRACE = 26;
+  public static final int AMPERSAND = 21;
   public static final int WHITESPACE = 2;
-  public static final int DOLLARSIGN = 15;
+  public static final int DOLLARSIGN = 23;
+  public static final int CMD_HORIZONTAL = 18;
+  public static final int CMD_MOTIONANALYSISGRAPH = 17;
   public static final int KW_TITLE = 7;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -43,9 +51,17 @@ public class LabParserSym {
   "KW_TITLE",
   "CMD_TITLE",
   "CMD_SHEET",
+  "CMD_VIDEOSHEET",
+  "CMD_MOTIONSHEET",
+  "CMD_CALCYSHEET",
   "CMD_HEADER",
   "CMD_CHECK",
   "CMD_TEXT",
+  "CMD_VIDEO",
+  "CMD_MOTIONANALYSISGRAPH",
+  "CMD_HORIZONTAL",
+  "CMD_ENDHORIZONTAL",
+  "CMD_EXPORT",
   "AMPERSAND",
   "PERCENT",
   "DOLLARSIGN",

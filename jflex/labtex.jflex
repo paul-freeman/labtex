@@ -63,11 +63,23 @@ Figure   = "\\begin\{figure\}" ~"\\end\{figure\}"
 %%
 
 /* scan to find commands */
-{Prefix} "title"            { yybegin(TITLE); System.out.println("(CMD_TITLE)title"); return symbol(LabParserSym.CMD_TITLE); }
 {Prefix} "sheet"            { yybegin(SHEET); System.out.println("(CMD_SHEET)sheet"); return symbol(LabParserSym.CMD_SHEET); }
+{Prefix} "videosheet"       { yybegin(SHEET); System.out.println("(CMD_VIDEOSHEET)videosheet"); return symbol(LabParserSym.CMD_VIDEOSHEET); }
+{Prefix} "motionsheet"      { yybegin(SHEET); System.out.println("(CMD_MOTIONSHEET)motionsheet"); return symbol(LabParserSym.CMD_MOTIONSHEET); }
+{Prefix} "calcysheet"       { yybegin(SHEET); System.out.println("(CMD_CALCYSHEET)calcysheet"); return symbol(LabParserSym.CMD_CALCYSHEET); }
+
+{Prefix} "title"            { yybegin(TITLE); System.out.println("(CMD_TITLE)title"); return symbol(LabParserSym.CMD_TITLE); }
 {Prefix} "header"           { yybegin(ELEMENT); System.out.println("(CMD_HEADER)header"); return symbol(LabParserSym.CMD_HEADER); }
 {Prefix} "text"             { yybegin(ELEMENT); System.out.println("(CMD_TEXT)text"); return symbol(LabParserSym.CMD_TEXT); }
 {Prefix} "check"            { yybegin(ELEMENT); System.out.println("(CMD_CHECK)check"); return symbol(LabParserSym.CMD_CHECK); }
+{Prefix} "video"            { yybegin(ELEMENT); System.out.println("(CMD_VIDEO)video"); return symbol(LabParserSym.CMD_VIDEO); }
+{Prefix} "motionanalysisgraph"
+                            { yybegin(ELEMENT); System.out.println("(CMD_MOTIONANALYSISGRAPH)"); return symbol(LabParserSym.CMD_MOTIONANALYSISGRAPH); }
+
+{Prefix} "horizontal"       { yybegin(ELEMENT); System.out.println("(CMD_HORIZONTAL)horizontal"); return symbol(LabParserSym.CMD_HORIZONTAL); }
+{Prefix} "endhorizontal"    { yybegin(ELEMENT); System.out.println("(CMD_ENDHORIZONTAL)endhorizontal"); return symbol(LabParserSym.CMD_ENDHORIZONTAL); }
+
+{Prefix} "export"           { yybegin(ELEMENT); System.out.println("(CMD_EXPORT)export"); return symbol(LabParserSym.CMD_EXPORT); }
 
 /* ignore advanced LaTeX stuff */
 {Equation}                  { System.out.println("(EQUATION)(equation omitted)"); return symbol(LabParserSym.LATEXSTRING, "(equation omitted)"); }

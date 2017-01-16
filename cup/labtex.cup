@@ -19,9 +19,17 @@ terminal        KW_TITLE;
 /* commands */
 terminal        CMD_TITLE,
                 CMD_SHEET,
+                CMD_VIDEOSHEET,
+                CMD_MOTIONSHEET,
+                CMD_CALCYSHEET,
                 CMD_HEADER,
                 CMD_CHECK,
-                CMD_TEXT;
+                CMD_TEXT,
+                CMD_VIDEO,
+                CMD_MOTIONANALYSISGRAPH,
+                CMD_HORIZONTAL,
+                CMD_ENDHORIZONTAL,
+                CMD_EXPORT;
 
 /* symbols */
 terminal        AMPERSAND,
@@ -37,22 +45,23 @@ terminal        AMPERSAND,
                 ESCAPED_BACKSLASH;
 
 /* non-terminals */
-non terminal String           latex_cmd, tex_file, title;
-non terminal String           sheets, sheet, normal_sheet, video_sheet, motion_sheet, calc_y_sheet;
-non terminal String           find_cmd, find_cmd_sym, find_left, find_left_sym;
-non terminal String           latex_string, string_piece;
-non terminal String           sheet_elems, sheet_elem, sheet_text ;
+non terminal String         latex_cmd, tex_file, title;
+non terminal String         sheets, sheet, normal_sheet, video_sheet, motion_sheet, calc_y_sheet;
+non terminal String         find_cmd, find_cmd_sym, find_left, find_left_sym;
+non terminal String         latex_string, string_piece;
+non terminal String         sheet_elems, sheet_elem, sheet_elem_opt, sheet_text ;
 
 /* latex environments */
-non terminal String           curly_elems, curly_elem;
-non terminal String     curly_braced, dollar_env, dollar_string, dollar_piece;
-non terminal String     ddollar_env, ddollar_string, ddollar_piece;
-non terminal            left_curly_brace, right_curly_brace;
-non terminal String           cmd_title, cmd_sheet, cmd_text, cmd_header, cmd_check ;
-non terminal String     basic_string, groups;
-non terminal String     text_string, text_piece_command, text_piece_command_w_par ;
-non terminal            opt_whitespace, dollarsign, tilde, percent, escaped_backslash;
-non terminal            href, href_string;
+non terminal String         curly_elems, curly_elem;
+non terminal String         curly_braced, dollar_env, dollar_string, dollar_piece;
+non terminal String         ddollar_env, ddollar_string, ddollar_piece;
+non terminal                left_curly_brace, right_curly_brace;
+non terminal String         cmd_title, cmd_sheet, cmd_videosheet, cmd_motionsheet, cmd_calcysheet ;
+non terminal String         cmd_text, cmd_header, cmd_check, cmd_video ;
+non terminal String         basic_string, groups;
+non terminal String         text_string, text_piece_command, text_piece_command_w_par ;
+non terminal String         opt_whitespace, dollarsign, tilde, percent, escaped_backslash;
+non terminal                href, href_string;
 
 /***********
  * grammar *
@@ -153,14 +162,61 @@ normal_sheet        ::= cmd_sheet latex_string:ls RIGHTCURLYBRACE find_cmd sheet
                             "    sheet:setTitle(\"" + ls + "\")\n" +
                             xs; :}
                         ;
-
-
-sheet_elems         ::= sheet_elems:xs sheet_elem:s                 {: RESULT = xs + s; :}
-                        | sheet_elem:s                              {: RESULT = s; :}
+video_sheet         ::= cmd_videosheet latex_string:ls RIGHTCURLYBRACE find_cmd sheet_elems:xs
+                        {:  ++sheetnumber;
+                            RESULT =
+                            "    -- SHEET " + sheetnumber + "\n" +
+                            "    local sheet = builder:create(\"Sheet\")\n" +
+                            "    builder:add(sheet)\n" +
+                            "    sheet:setTitle(\"" + ls + "\")\n" +
+                            xs; :}
                         ;
-sheet_elem          ::= cmd_text latex_string:ls BLANKLINE find_cmd          {: RESULT = "    sheet:addText(\"" + ls + "\")\n"; :}
-                        | cmd_header latex_string:ls BLANKLINE find_cmd      {: RESULT = "    sheet:addHeader(\"" + ls + "\")\n"; :}
-                        | cmd_check latex_string:ls BLANKLINE find_cmd       {: RESULT = "    sheet:addCheckQuestion(\"" + ls + "\")\n"; :}
+motion_sheet        ::= cmd_motionsheet latex_string:l1 right_curly_brace
+                        left_curly_brace latex_string:l2 right_curly_brace
+                        left_curly_brace latex_string:l3 right_curly_brace
+                        {:  ++sheetnumber;
+                            RESULT =
+                            "    -- SHEET " + sheetnumber + "\n" +
+                            "    local sheet = builder:create(\"MotionAnalysis\")\n" +
+                            "    builder:add(sheet)\n" +
+                            "    sheet:setTitle(\"" + l1 + "\")\n" +
+                            "    sheet:setExperiment(" + l2 + ")\n" +
+                            "    sheet:setDescriptionText(\"" + l3 + "\")\n"; :}
+                        ;
+calc_y_sheet        ::= cmd_calcysheet latex_string:l1 right_curly_brace
+                        left_curly_brace latex_string:l2 right_curly_brace
+                        left_curly_brace latex_string:l3 right_curly_brace
+                        {:  ++sheetnumber;
+                            RESULT =
+                            "    -- SHEET " + sheetnumber + "\n" +
+                            "    local sheet = builder:create(\"CalculateYSpeed\")\n" +
+                            "    builder:add(sheet)\n" +
+                            "    sheet:setTitle(\"" + l1 + "\")\n" +
+                            "    sheet:setExperiment(" + l2 + ")\n" +
+                            "    sheet:setHeader(\"" + l3 + "\")\n"; :}
+                        ;
+
+
+
+
+sheet_elems         ::= sheet_elems:xs sheet_elem:s                         {: RESULT = xs + s; :}
+                        | sheet_elem:s                                      {: RESULT = s; :}
+                        ;
+sheet_elem          ::= sheet_elem_opt:s BLANKLINE find_cmd                 {: RESULT = s; :}
+                        | sheet_elem_opt:s                                  {: RESULT = s; :}
+                        ;
+sheet_elem_opt      ::= cmd_text latex_string:ls                            {: RESULT = "    sheet:addText(\"" + ls + "\")\n"; :}
+                        | cmd_header latex_string:ls                        {: RESULT = "    sheet:addHeader(\"" + ls + "\")\n"; :}
+                        | cmd_check latex_string:ls                         {: RESULT = "    sheet:addCheckQuestion(\"" + ls + "\")\n"; :}
+                        | CMD_EXPORT                                        {: RESULT = "    local exportButton = sheet:addExportButton()\n"; :}
+                        | cmd_video left_curly_brace basic_string:name right_curly_brace latex_string:ls
+                            {: RESULT =
+                               "    local video = sheet:addCameraExperiment()\n" +
+                               "    video:setDescriptionText(\"" + ls + "\")\n" +
+                               "    local " + name + " = video:getExperiment()\n"; :}
+                        | CMD_MOTIONANALYSISGRAPH left_curly_brace basic_string:exp right_curly_brace
+                                                  left_curly_brace basic_string:type right_curly_brace
+                            {: RESULT = "    sheet:addMotionAnalysisGraph(" + exp + "):" + type + "()\n"; :}
                         ;
 
 
@@ -179,163 +235,31 @@ string_piece        ::= basic_string:s                              {: RESULT = 
                         | href
                         ;
 
-href ::= LATEX_HREF LEFTCURLYBRACE href_string RIGHTCURLYBRACE ;
-href_string ::= href_string basic_string | href_string UNDERSCORE | basic_string ;
+href                ::= LATEX_HREF LEFTCURLYBRACE href_string RIGHTCURLYBRACE ;
+href_string         ::= href_string basic_string | href_string UNDERSCORE | basic_string ;
 
-
-/* atomic units that are not divided */
+/* titles and sheets that have curly braced arguments
 cmd_title           ::= CMD_TITLE find_left left_curly_brace ;
 cmd_sheet           ::= CMD_SHEET find_left left_curly_brace ;
+cmd_motionsheet     ::= CMD_MOTIONSHEET find_left left_curly_brace ;
+cmd_calcysheet      ::= CMD_CALCYSHEET find_left left_curly_brace ;
+
+/* atomic units that are not divided */
 cmd_text            ::= CMD_TEXT opt_whitespace;
 cmd_header          ::= CMD_HEADER opt_whitespace;
 cmd_check           ::= CMD_CHECK opt_whitespace;
+cmd_video           ::= CMD_VIDEO opt_whitespace;
+
 left_curly_brace    ::= LEFTCURLYBRACE opt_whitespace ;
-right_curly_brace   ::= RIGHTCURLYBRACE WHITESPACE                          {: RESULT = " "; :}
-                        | RIGHTCURLYBRACE                                   {: RESULT = ""; :}
-                        ;
+right_curly_brace   ::= RIGHTCURLYBRACE opt_whitespace:s                    {: RESULT = s; :} ;
 latex_cmd           ::= LATEX_CMD opt_whitespace ;
 dollarsign          ::= DOLLARSIGN opt_whitespace ;
 tilde               ::= TILDE opt_whitespace ;
 percent             ::= PERCENT opt_whitespace ;
 escaped_backslash   ::= ESCAPED_BACKSLASH opt_whitespace                    {: RESULT = "\n"; :} ;
-basic_string        ::= LATEXSTRING:ls WHITESPACE                           {: RESULT = ls + " "; :}
-                        | LATEXSTRING:ls                                    {: RESULT = ls; :}
+basic_string        ::= LATEXSTRING:ls opt_whitespace:s                     {: RESULT = ls + s; :} ;
+
+opt_whitespace      ::= WHITESPACE                                          {: RESULT = " "; :}
+                        |                                                   {: RESULT = ""; :}
                         ;
-opt_whitespace      ::= WHITESPACE | /* nothing */ ;
 
-
-
-
-
-
-/*
-            |
-            KW_LABLETHEADER LCURLY LATEXSTRING:s
-            {:
-                System.out.println("\tsheet:addHeader(\""+s+"\")");
-            :}
-            RCURLY
-            |
-            KW_LABLETCHECK LCURLY LATEXSTRING:s
-            {:
-                System.out.println("\tsheet:addCheckQuestion(\""+s+"\")");
-            :}
-            RCURLY
-            |
-            KW_LABLETVIDEO LCURLY LATEXSTRING:s1 RCURLY LCURLY LATEXSTRING:s2
-            {:
-                ++videonumber;
-                System.out.println("\tlocal cameraExperiment"+videonumber+" = sheet:addCameraExperiment()");
-                System.out.println("\tcameraExperiment"+videonumber+":setDescriptionText(\""+s2+"\")");
-                System.out.println("\tlocal "+s1+" = cameraExperiment"+videonumber+":getExperiment()");
-            :}
-            RCURLY
-            |
-            horizontal
-*/
-/*
-video_sheet ::=     KW_BEGIN LCURLY KW_LABLETVIDEOPAGE RCURLY LCURLY LATEXSTRING:ls RCURLY
-                    {:  ++sheetnumber;
-                        System.out.println();
-                        System.out.println("\t-- SHEET "+sheetnumber);
-                        System.out.println("\tlocal sheet = builder:create(\"Sheet\")");
-                        System.out.println("\tbuilder:add(sheet)");
-                        System.out.println("\tsheet:setTitle(\"" + ls + "\")"); :}
-                    elems
-                    |
-                    KW_BEGIN LCURLY KW_LABLETVIDEOPAGE RCURLY LCURLY LATEXSTRING:ls RCURLY KW_HORIZONTAL
-                    {:  ++sheetnumber;
-                        System.out.println();
-                        System.out.println("\t-- SHEET "+sheetnumber);
-                        System.out.println("\tlocal sheet = builder:create(\"Sheet\")");
-                        System.out.println("\tbuilder:add(sheet)");
-                        System.out.println("\tsheet:setMainLayoutOrientation(\"horizontal\")");
-                        System.out.println("\tsheet:setTitle(\"" + ls + "\")"); :}
-                    elems ;
-
-motion_sheet ::=    KW_LABLETMOTIONPAGE LCURLY LATEXSTRING:l1 RCURLY
-                                        LCURLY LATEXSTRING:l2 RCURLY
-                                        LCURLY LATEXSTRING:l3 RCURLY
-                    {:  ++sheetnumber;
-                        System.out.println();
-                        System.out.println("\t-- SHEET "+sheetnumber);
-                        System.out.println("\tlocal sheet = builder:create(\"MotionAnalysis\")");
-                        System.out.println("\tbuilder:add(sheet)");
-                        System.out.println("\tsheet:setTitle(\"" + l1 + "\")");
-                        System.out.println("\tsheet:setExperiment(" + l2 + ")");
-                        System.out.println("\tsheet:setDescriptionText(\"" + l3 + "\")"); :}
-                    ;
-
-calc_y_sheet ::=    KW_LABLETCALCYSPEED LCURLY LATEXSTRING:l1 RCURLY
-                                        LCURLY LATEXSTRING:l2 RCURLY
-                                        LCURLY LATEXSTRING:l3 RCURLY
-                    {:  ++sheetnumber;
-                        System.out.println();
-                        System.out.println("\t-- SHEET "+sheetnumber);
-                        System.out.println("\tlocal sheet = builder:create(\"CalculateYSpeed\")");
-                        System.out.println("\tbuilder:add(sheet)");
-                        System.out.println("\tsheet:setExperiment(" + l2 + ")");
-                        System.out.println("\tsheet:setTitle(\"" + l1 + "\")");
-                        System.out.println("\tsheet:setHeader(\"" + l3 + "\")"); :}
-                    ;
-
-named_elems ::=
-            named_elem named_elems
-            | named_elem ;
-named_elem ::=
-            KW_LABLETTEXT LCURLY LATEXSTRING:s
-            {:
-                System.out.println("\tsheet:addText(\""+s+"\", "+element+")");
-            :}
-            RCURLY
-            |
-            KW_LABLETHEADER LCURLY LATEXSTRING:s
-            {:
-                System.out.println("\tsheet:addHeader(\""+s+"\", "+element+")");
-            :}
-            RCURLY
-            |
-            KW_LABLETCHECK LCURLY LATEXSTRING:s
-            {:
-                System.out.println("\tsheet:addCheckQuestion(\""+s+"\", "+element+")");
-            :}
-            RCURLY
-            |
-            horizontal
-            ;
-horizontal ::=
-            KW_HORIZONTALTWO
-            {:
-                Integer h = ++horizontalnumber;
-                Integer n = sheetnumber;
-                element = "horizontalLayout";
-                System.out.println();
-                System.out.println("\tlocal "+element+" = sheet:addHorizontalGroupLayout()");
-            :}
-            LCURLY vertical RCURLY
-            LCURLY vertical RCURLY
-            |
-            KW_HORIZONTALTHREE
-            {:
-                Integer h = ++horizontalnumber;
-                Integer n = sheetnumber;
-                element = "horizontalLayout";
-                System.out.println();
-                System.out.println("\tlocal "+element+" = sheet:addHorizontalGroupLayout()");
-            :}
-            LCURLY vertical RCURLY
-            LCURLY vertical RCURLY
-            LCURLY vertical RCURLY
-            ;
-vertical ::=
-            {:
-                Integer v = ++verticalnumber;
-                prev = element;
-                element = "verticalLayout";
-                System.out.println();
-                System.out.println("\tlocal "+element+" = sheet:addVerticalGroupLayout("+prev+")");
-            :}
-            named_elems
-            {: element = prev; :}
-            ;
-*/
